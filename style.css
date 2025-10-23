@@ -53,7 +53,7 @@ body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
   margin: 0;
   padding: 0;
-  padding-top: 80px;
+  padding-top: 80px; /* Space for fixed top buttons */
   background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
   color: var(--text);
   min-height: 100vh;
@@ -83,7 +83,7 @@ code { background: rgba(125,125,125,0.1); padding: 2px 5px; border-radius: 4px; 
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   margin-bottom: 30px;
 }
-.card:first-of-type { margin-top: 0; } /* Ensure first card has no top margin */
+.card:first-of-type { margin-top: 0; }
 
 
 .row { display: flex; gap: 8px; align-items: center; }
@@ -94,30 +94,29 @@ input[type=text], textarea {
 }
 textarea { width: 100%; font-size: 15px; font-family: inherit; resize: none; min-height: 60px; }
 
-/* --- CORRECTED Button Styles --- */
+/* --- Button Styles --- */
 button {
   padding: 10px 14px;
   border-radius: 8px;
-  border: none; /* Explicitly no border */
-  background-image: linear-gradient(90deg, var(--accent), #3b82f6); /* Use background-image */
-  background-color: var(--accent); /* Fallback color */
+  border: none;
+  background-image: linear-gradient(90deg, var(--accent), #3b82f6);
+  background-color: var(--accent);
   color: var(--accent-text);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s ease-out;
-  box-shadow: 0 2px 4px var(--button-shadow); /* Subtle shadow */
+  box-shadow: 0 2px 4px var(--button-shadow);
 }
 button#endDutyBtn {
   background-image: linear-gradient(90deg, var(--danger), #f63b3b);
-  background-color: var(--danger); /* Fallback */
+  background-color: var(--danger);
   color: var(--danger-text);
 }
 #stopTimerBtn {
     background-image: linear-gradient(90deg, #6b7280, #4b5563);
-    background-color: #6b7280; /* Fallback */
+    background-color: #6b7280;
     color: white;
 }
-/* Ensure hover/active styles use variables and apply shadows correctly */
 button:hover:not(:disabled) {
   transform: translateY(-2px);
   filter: brightness(1.1);
@@ -126,51 +125,406 @@ button:hover:not(:disabled) {
 button:active:not(:disabled) {
   transform: translateY(0px) scale(0.98);
   filter: brightness(0.95);
-  box-shadow: 0 1px 2px var(--button-shadow); /* Smaller shadow when pressed */
+  box-shadow: 0 1px 2px var(--button-shadow);
 }
 button:disabled {
   opacity: .5; cursor: not-allowed; transform: none; filter: none; box-shadow: none;
-  background-image: none; /* Remove gradient when disabled */
-  background-color: var(--muted); /* Use muted color */
-  color: var(--text); /* Adjust text color for contrast */
+  background-image: none;
+  background-color: var(--muted);
+  color: var(--text);
 }
 
 /* --- Other Component Styles --- */
-.result { /* ... existing result styles ... */ }
-.stars { /* ... */ } .meta { /* ... */ } .small { /* ... */ } .hint { /* ... */ } .notfound { /* ... */ }
-footer { /* ... */ }
-.copy-btn { /* ... copy button styles ... */ }
+.result { margin-top: 16px; padding: 14px; border-radius: 10px; background: linear-gradient(180deg, var(--result-bg-start), var(--result-bg-end)); display: flex; align-items: center; gap: 14px; transition: background-color 0.3s ease; }
+.stars { font-size: 28px; }
+.meta { color: var(--muted); font-size: 14px; }
+.small { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.hint { margin-top: 10px; color: var(--muted); }
+.notfound { color: var(--notfound-text); }
+footer { margin-top: 30px; margin-bottom: 20px; color: var(--muted); font-size: 13px; text-align: center; }
+.copy-btn { margin-left: 10px; padding: 4px 8px; border-radius: 6px; background: var(--accent); color: var(--accent-text); font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease-out; flex-shrink: 0; }
+.copy-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+.copy-btn:active { transform: scale(0.95); filter: brightness(0.9); }
 
 /* Animation */
-@keyframes fadeInDown { /* ... */ }
-.smooth-show { /* ... */ }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.smooth-show { animation: fadeInDown 0.3s ease-out forwards; }
+
 
 /* --- Fixed Top Buttons --- */
-#homeBtn, #menuToggleBtn, #themeToggleBtn { /* ... existing styles ... */ }
-/* ... other nav styles ... */
+#homeBtn, #menuToggleBtn, #themeToggleBtn {
+  position: fixed; top: 20px; z-index: 1010;
+  padding: 8px; background: var(--card); border: 1px solid var(--border); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease-out;
+}
+#homeBtn { left: 20px; }
+#themeToggleBtn { left: 80px; }
+#menuToggleBtn { right: 20px; padding: 6px 10px; font-size: 20px; line-height: 1; }
+#homeBtn svg, #themeToggleBtn svg { width: 20px; height: 20px; stroke: var(--muted); transition: stroke 0.3s ease; }
+#homeBtn:hover, #themeToggleBtn:hover, #menuToggleBtn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 4px 12px var(--button-hover-shadow); color: var(--accent);}
+#homeBtn:hover svg, #themeToggleBtn:hover svg { stroke: var(--accent); }
+#homeBtn:active, #themeToggleBtn:active, #menuToggleBtn:active { transform: translateY(0px) scale(0.98); filter: brightness(0.95); box-shadow: 0 1px 2px var(--button-shadow); }
+.icon-moon { display: none; }
+.light-theme .icon-sun { display: none; }
+.light-theme .icon-moon { display: block; }
 
 /* --- Tab Content --- */
-.tab-content { /* ... */ }
-.tab-content.active { /* ... */ }
+.tab-content { display: none; padding-bottom: 20px; }
+.tab-content.active { display: block; animation: fadeInDown 0.3s ease-out; }
 
 /* --- Wizard Styles --- */
-/* ... existing wizard styles ... */
+.step-title { margin-bottom: 10px; font-size: 18px; color: var(--accent); }
+.wizard-step { display: none; animation: fadeInDown 0.4s ease-out; }
+.wizard-step.active { display: block; }
+#towingWizardNav button, #fineWizardNav button { width: 140px; }
 
 /* --- Slide Menu Styles --- */
-#menuOverlay { /* ... */ }
-#slideMenu { /* ... */ }
-/* ... other menu styles ... */
+#menuOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; }
+#menuOverlay.menu-open { opacity: 1; pointer-events: auto; }
+#slideMenu {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 280px; background: #0d1625; z-index: 1002;
+  transform: translateX(100%); transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+  padding: 20px; padding-top: 70px; box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
+}
+.light-theme #slideMenu { background: #e2e8f0; box-shadow: -10px 0 30px rgba(100, 116, 139, 0.2); }
+#slideMenu.menu-open { transform: translateX(0); }
+#closeMenuBtn { position: absolute; top: 20px; right: 20px; z-index: 1003; font-size: 24px; background: transparent; border: none; color: var(--muted); padding: 5px; line-height: 1; transition: color 0.3s ease; }
+#closeMenuBtn:hover { color: var(--accent); transform: none; filter: none; box-shadow: none; }
+.menu-btn {
+  width: 100%; text-align: left; padding: 12px 15px; background: var(--card);
+  border: 1px solid var(--border); color: var(--muted);
+  transition: all 0.2s ease-out;
+}
+.menu-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 4px 12px var(--button-hover-shadow); color: var(--text); border-color: var(--accent); }
+.light-theme .menu-btn:hover:not(:disabled) { color: var(--accent); }
+.menu-btn:active:not(:disabled) { transform: translateY(0px) scale(0.98); filter: brightness(0.95); box-shadow: 0 1px 2px var(--button-shadow); }
 
 /* --- Settings Tab --- */
-/* ... existing settings styles ... */
+#settingsTab label { cursor: pointer; display: flex; align-items: center; }
+#settingsTab input[type="radio"] { margin-right: 8px; }
 
 /* --- Shift Timer --- */
-/* ... existing shift timer styles ... */
+#shiftTimerDisplay { color: var(--text); letter-spacing: 1px; font-size: 20px; font-weight: 600; font-family: monospace; flex: 1; }
 
 /* --- About Tab --- */
-/* ... existing about styles ... */
+#aboutBackground { position: fixed; inset: 0; background-image: url('about-background.jpg'); background-size: cover; background-position: center center; z-index: 1; }
+#aboutBackground::before { content: ''; position: absolute; inset: 0; background-color: rgba(11, 18, 32, 0.75); z-index: 2; transition: background-color 0.3s ease; }
+.light-theme #aboutBackground::before { background-color: rgba(255, 255, 255, 0.6); }
+#aboutTab .container.about-content { position: relative; z-index: 3; padding-top: 28px; color: #e6eef6; }
+.light-theme #aboutTab .container.about-content { color: #1e293b; }
+#aboutTab .container.about-content h1 { color: #e6eef6; }
+.light-theme #aboutTab .container.about-content h1 { color: #1e293b; }
+#aboutTab .card { background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(5px); }
 
-/* --- Situations Flyout Styles --- */
-#situationsFlyout { /* ... existing flyout styles ... */ }
-#situationsToggleBtn { /* ... existing toggle button styles ... */ }
-/* ... other flyout styles ... */
+/* --- NO Flyout Styles --- */
+```
+
+***
+
+## 3. `script.js` (Stable Version - No Flyout Logic)
+
+```javascript
+// --- Penal Code Mapping ---
+const PC_MAP = { /* ... Abridged ... */ };
+
+// State objects for wizards
+const towingWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
+const fineVehicleWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
+
+// --- Helper Functions ---
+const normalize = (input) => input ? input.trim().toUpperCase().replace(/^PC\s*/, '').replace(/\s+/g, '') : '';
+const lookup = (code) => { /* ... lookup logic ... */ }; // Abridged
+const formatTime = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = Math.floor(seconds % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; };
+
+// --- Wizard Step Display Functions ---
+function showTowingStep(stepNumber) {
+    const state = towingWizardState; if (!state.steps || state.steps.length === 0) return;
+    state.currentStep = stepNumber;
+    state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
+    if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
+    if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
+    if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
+}
+function showFineVehicleStep(stepNumber) {
+    const state = fineVehicleWizardState; if (!state.steps || state.steps.length === 0) return;
+    state.currentStep = stepNumber;
+    state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
+    if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
+    if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
+    if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
+}
+
+// --- Main Initialization ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Loaded. Initializing...");
+
+    // --- Select ALL elements ---
+    const penalCodeInput = document.getElementById('codeInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultArea = document.getElementById('resultArea');
+    const notFound = document.getElementById('notFound');
+    const starDisplay = document.getElementById('starDisplay');
+    const pcTitle = document.getElementById('pcTitle');
+    const pcMeta = document.getElementById('pcMeta');
+
+    const startDutyBtn = document.getElementById('startDutyBtn');
+    const endDutyBtn = document.getElementById('endDutyBtn');
+    const bodycamArea = document.getElementById('bodycamArea');
+    const endBodycamArea = document.getElementById('endBodycamArea');
+
+    const situationInput = document.getElementById('situationInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const analysisResultArea = document.getElementById('analysisResultArea');
+    const analysisSummary = document.getElementById('analysisSummary');
+    const analysisList = document.getElementById('analysisList');
+    const analysisNotFound = document.getElementById('analysisNotFound');
+
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const slideMenu = document.getElementById('slideMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const homeBtn = document.getElementById('homeBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const towBtn = document.getElementById('towBtn');
+    const fineBtn = document.getElementById('fineBtn');
+    const arrestBtn = document.getElementById('arrestBtn');
+    const aboutBtn = document.getElementById('aboutBtn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    const settingsBadgeInput = document.getElementById('settingsBadgeInput');
+    const themeDarkRadio = document.getElementById('themeDarkRadio');
+    const themeLightRadio = document.getElementById('themeLightRadio');
+    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    const settingsSavedMsg = document.getElementById('settingsSavedMsg');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    const shiftTimerDisplay = document.getElementById('shiftTimerDisplay');
+    const startTimerBtn = document.getElementById('startTimerBtn');
+    const stopTimerBtn = document.getElementById('stopTimerBtn');
+
+    // Simple check if essential elements loaded
+    if (!penalCodeInput || !startDutyBtn || !menuToggleBtn || !tabContents || tabContents.length === 0) {
+        console.error("Essential elements missing! Aborting script setup.");
+        alert("Error loading page components. Please ensure index.html is correct and element IDs match.");
+        return;
+    }
+
+    // --- Settings ---
+    function applySettings() {
+        const savedBadge = localStorage.getItem('badgeNumber') || '';
+        if (settingsBadgeInput) settingsBadgeInput.value = savedBadge;
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (themeDarkRadio) themeDarkRadio.checked = (savedTheme === 'dark');
+        if (themeLightRadio) themeLightRadio.checked = (savedTheme === 'light');
+        document.body.classList.toggle('light-theme', savedTheme === 'light');
+        console.log("Applied theme:", savedTheme);
+    }
+
+    function saveSettings() {
+        if (settingsBadgeInput) localStorage.setItem('badgeNumber', settingsBadgeInput.value.trim());
+        let selectedTheme = (themeLightRadio && themeLightRadio.checked) ? 'light' : 'dark';
+        localStorage.setItem('theme', selectedTheme);
+        applySettings();
+        if (settingsSavedMsg) {
+            settingsSavedMsg.style.display = 'inline';
+            setTimeout(() => { if (settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
+        }
+        console.log("Settings saved.");
+    }
+
+    if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
+    else { console.warn("Save Settings button not found"); }
+
+    // --- Theme Toggle Button ---
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-theme');
+            const newTheme = isLight ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            if (themeDarkRadio) themeDarkRadio.checked = !isLight;
+            if (themeLightRadio) themeLightRadio.checked = isLight;
+            console.log("Theme toggled to:", newTheme);
+        });
+    } else { console.warn("Theme Toggle button not found"); }
+
+    // --- Menu and Tab Navigation ---
+    function openMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.add('menu-open'); menuOverlay.classList.add('menu-open'); } }
+    function closeMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.remove('menu-open'); menuOverlay.classList.remove('menu-open'); } }
+    function showTab(targetId) {
+        if (!tabContents) return;
+        console.log("Switching to tab:", targetId);
+        tabContents.forEach(tab => {
+             if(tab) tab.classList.toggle('active', tab.id === targetId);
+        });
+        window.scrollTo(0, 0);
+    }
+
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
+    if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+    if (homeBtn) homeBtn.addEventListener('click', () => { showTab('homeTab'); closeMenu(); });
+    if (settingsBtn) settingsBtn.addEventListener('click', () => { showTab('settingsTab'); closeMenu(); });
+    if (towBtn) towBtn.addEventListener('click', () => { showTab('towingTab'); closeMenu(); });
+    if (fineBtn) fineBtn.addEventListener('click', () => { showTab('fineVehicleTab'); closeMenu(); });
+    if (aboutBtn) aboutBtn.addEventListener('click', () => { showTab('aboutTab'); closeMenu(); });
+    if (arrestBtn) arrestBtn.addEventListener('click', () => { alert('Arrest guide coming soon!'); closeMenu(); });
+
+    // --- Penal Code Search ---
+    if (searchBtn && penalCodeInput) {
+        searchBtn.addEventListener('click', () => {
+            console.log("Search button clicked");
+            const raw = penalCodeInput.value;
+            const norm = normalize(raw);
+            if (!norm) {
+                 if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+                 if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+                 return;
+            }
+            const res = lookup(norm);
+            if (res) {
+                 if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
+                 if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
+                 if(starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
+                 if(pcTitle) pcTitle.textContent = 'PC ' + norm;
+                 if(pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
+            } else {
+                 if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+                 if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+            }
+        });
+        penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchBtn.click(); });
+    } else { console.warn("Search input or button not found"); }
+
+
+    // --- Duty Tools ---
+     if (startDutyBtn && bodycamArea && endBodycamArea) {
+        startDutyBtn.addEventListener('click', () => {
+            console.log("Start Duty clicked");
+            const savedBadge = localStorage.getItem('badgeNumber');
+            if (!savedBadge || savedBadge.trim() === '') {
+                alert('Please set your Badge Number in the Settings tab first!');
+                showTab('settingsTab'); return;
+            }
+            const now = new Date();
+            const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
+            const text = `${savedBadge} to Dispatch, show me 10-41 at ${ukTime}`;
+            navigator.clipboard.writeText(text);
+            bodycamArea.style.display = 'block'; bodycamArea.classList.add('smooth-show');
+            endBodycamArea.style.display = 'none'; endBodycamArea.classList.remove('smooth-show');
+        });
+    } else { console.warn("Start Duty button or bodycam areas not found"); }
+
+
+    if (endDutyBtn && endBodycamArea && bodycamArea) {
+        endDutyBtn.addEventListener('click', () => {
+             console.log("End Duty clicked");
+             const savedBadge = localStorage.getItem('badgeNumber');
+            if (!savedBadge || savedBadge.trim() === '') {
+                alert('Please set your Badge Number in the Settings tab first!');
+                showTab('settingsTab'); return;
+            }
+            const now = new Date();
+            const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
+            const text = `${savedBadge} to Dispatch, show me 10-42 at ${ukTime}`;
+            navigator.clipboard.writeText(text);
+            endBodycamArea.style.display = 'block'; endBodycamArea.classList.add('smooth-show');
+            bodycamArea.style.display = 'none'; bodycamArea.classList.remove('smooth-show');
+        });
+    } else { console.warn("End Duty button or bodycam areas not found"); }
+
+
+    // --- Situation Analyzer ---
+    if (analyzeBtn && situationInput && analysisList && analysisNotFound && analysisResultArea && analysisSummary) {
+        analyzeBtn.addEventListener('click', () => {
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analyzing...';
+            const text = situationInput.value.trim().toLowerCase();
+            const keywords = text.split(/\s+/).filter(k => k.length > 3);
+            const matches = []; let totalStars = 0;
+            if (keywords.length > 0) {
+                for (const code in PC_MAP) {
+                    const charge = PC_MAP[code]; const description = charge.desc.toLowerCase();
+                    const isMatch = keywords.some(keyword => description.includes(keyword));
+                    if (isMatch) { matches.push({ code, ...charge }); totalStars += charge.count; }
+                }
+            }
+            analysisList.innerHTML = ''; // Clear previous results
+            if (matches.length > 0) {
+                analysisNotFound.style.display = 'none'; analysisNotFound.classList.remove('smooth-show');
+                analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
+                analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
+                matches.forEach(charge => {
+                    const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
+                    el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
+                    analysisList.appendChild(el);
+                });
+            } else {
+                analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
+                analysisNotFound.style.display = 'block'; analysisNotFound.classList.add('smooth-show');
+            }
+            analyzeBtn.disabled = false; analyzeBtn.textContent = 'Analyze Situation';
+        });
+    } else { console.warn("Situation Analyzer elements not found"); }
+
+
+    // --- Shift Timer ---
+    let shiftTimerInterval = null;
+    let shiftStartTime = 0;
+    let shiftElapsedTime = 0;
+    let isTimerRunning = false;
+
+    function updateTimerDisplay() { if (shiftTimerDisplay) shiftTimerDisplay.textContent = formatTime(shiftElapsedTime); }
+    function startTimer() { if (isTimerRunning) return; isTimerRunning = true; shiftStartTime = Date.now() - (shiftElapsedTime * 1000); shiftTimerInterval = setInterval(() => { shiftElapsedTime = Math.floor((Date.now() - shiftStartTime) / 1000); updateTimerDisplay(); }, 1000); if (startTimerBtn) startTimerBtn.disabled = true; if (stopTimerBtn) stopTimerBtn.disabled = false; console.log("Timer started");}
+    function stopTimer() { if (!isTimerRunning) return; isTimerRunning = false; clearInterval(shiftTimerInterval); if (startTimerBtn) startTimerBtn.disabled = false; if (stopTimerBtn) stopTimerBtn.disabled = true; console.log("Timer stopped");}
+    if (startTimerBtn) startTimerBtn.addEventListener('click', startTimer);
+    if (stopTimerBtn) stopTimerBtn.addEventListener('click', stopTimer);
+    updateTimerDisplay(); // Initial display
+
+
+    // --- Wizard Setup ---
+    function setupWizard(state, containerId, prevBtnId, nextBtnId, counterId, restartBtnId, showStepFunc) {
+        const container = document.getElementById(containerId);
+        if (!container) { console.warn(`Wizard container "${containerId}" not found`); return; }
+        state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length;
+        if (state.totalSteps === 0) { console.warn(`No steps found in wizard "${containerId}"`); return; }
+        state.prevBtn = document.getElementById(prevBtnId); state.nextBtn = document.getElementById(nextBtnId);
+        state.counter = document.getElementById(counterId); state.restartBtn = document.getElementById(restartBtnId);
+        if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) showStepFunc(state.currentStep - 1); });
+        if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) showStepFunc(state.currentStep + 1); });
+        if (state.restartBtn) state.restartBtn.addEventListener('click', () => { showStepFunc(1); });
+        showStepFunc(1); // Show first step
+    }
+
+    setupWizard(towingWizardState, 'towingWizardContainer', 'prevStepBtn', 'nextStepBtn', 'stepCounter', 'restartWizardBtn', showTowingStep);
+    setupWizard(fineVehicleWizardState, 'fineWizardContainer', 'prevFineStepBtn', 'nextFineStepBtn', 'fineStepCounter', 'restartFineWizardBtn', showFineVehicleStep);
+
+    // --- Apply Initial Settings ---
+    applySettings();
+
+    // --- Generic Copy Buttons ---
+    document.querySelectorAll('.copy-btn[data-target]').forEach(theBtn => {
+        theBtn.addEventListener('click', () => {
+            const targetId = theBtn.dataset.target;
+            const target = document.getElementById(targetId);
+            if (target) {
+                navigator.clipboard.writeText(target.textContent);
+                const originalText = theBtn.textContent;
+                if (originalText.toLowerCase() !== 'copied!') {
+                    theBtn.textContent = 'Copied!';
+                    setTimeout(() => { theBtn.textContent = originalText; }, 1000);
+                }
+            } else {
+                console.warn(`Copy target not found: ${targetId}`);
+            }
+        });
+    });
+
+    // Home tab is active by default in HTML
+    console.log("Initialization complete.");
+
+}); // End of DOMContentLoaded
+
