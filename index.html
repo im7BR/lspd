@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Penal Code ⭐ Lookup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body> <button id="homeBtn" title="Go Home">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+  </button>
+  <button id="themeToggleBtn" title="Toggle Theme">
+    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+  </button>
+  <button id="menuToggleBtn">☰</button>
+  <div id="menuOverlay"></div>
+  <div id="slideMenu">
+    <button id="closeMenuBtn">×</button>
+    <h3 style="margin: 20px 0 0; color: var(--accent);">Menu</h3>
+    <button class="menu-btn" id="settingsBtn">Settings</button>
+    <button class="menu-btn" id="towBtn">Tow Vehicle</button>
+    <button class="menu-btn" id="fineBtn">Fine Vehicle</button>
+    <button class="menu-btn" id="arrestBtn">Arrest</button>
+    <button class="menu-btn" id="aboutBtn">About</button>
+  </div>
+
+  <div id="homeTab" class="tab-content active">
+    <div class="container">
+      <h1>Penal Code ⭐ Lookup</h1>
+      <p class="lead">Type a penal code (for example <code>PC 2.10.6</code> or <code>2.10.6</code>) and press Search — the stars (wanted level) will be shown.</p>
+
+      <div class="card">
+         <div class="row">
+            <input id="codeInput" type="text" placeholder="Enter penal code (e.g. PC 2.10.6)" autofocus />
+            <button id="searchBtn">Search</button>
+          </div>
+          <div id="resultArea" class="result" style="display:none">
+            <div class="stars" id="starDisplay">✨</div>
+            <div>
+              <div id="pcTitle" style="font-weight:700"></div>
+              <div class="meta" id="pcMeta"></div>
+            </div>
+          </div>
+          <div id="notFound" class="result notfound" style="display:none">
+            <div>Penal code not found in the database. Try different formatting (e.g. <code>PC 2.10.6</code>, <code>2.10.6</code>, or <code>2.10</code>).</div>
+          </div>
+          <div class="hint">Tip: you can enter with or without the <code>PC</code> prefix.</div>
+      </div>
+
+      <div class="card" style="margin-top:30px">
+         <h2 style="margin-bottom:10px;font-size:18px;">Duty Tools</h2>
+        <div class="row" style="margin-bottom:16px">
+          <button id="startDutyBtn" style="flex:1">START DUTY</button>
+          <button id="endDutyBtn" style="flex:1;background:linear-gradient(90deg,var(--danger),#f63b3b)">END DUTY</button>
+        </div>
+        <div id="shiftTimerContainer" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
+            <h3 style="font-size: 16px; color: var(--muted); margin-bottom: 10px;">Shift Timer</h3>
+            <div class="row" style="align-items: center;">
+                <span id="shiftTimerDisplay" style="font-size: 20px; font-weight: 600; font-family: monospace; flex: 1;">00:00:00</span>
+                <button id="startTimerBtn" style="width: 100px;">Start</button>
+                <button id="stopTimerBtn" style="width: 100px; background: linear-gradient(90deg, #6b7280, #4b5563); color: white;" disabled>Stop</button>
+            </div>
+        </div>
+        <div id="bodycamArea" style="margin-top:16px;display:none">
+           <p class="small" style="margin-bottom:10px; text-align:center; color: var(--accent);">10-41 message copied! Now activate bodycam.</p>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div id="bodycam1">/me takes out Bodycam, turns it on and checks for the red light</div>
+            <button class="copy-btn" data-target="bodycam1">Copy</button>
+          </div>
+          <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between;">
+            <div id="bodycam2">/do It is recording, bodycam is ballistic and water proof</div>
+            <button class="copy-btn" data-target="bodycam2">Copy</button>
+          </div>
+        </div>
+        <div id="endBodycamArea" style="margin-top:16px;display:none">
+          <p class="small" style="margin-bottom:10px; text-align:center; color: var(--accent);">10-42 message copied! Now deactivate bodycam.</p>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div id="endBodycamText">/do uploads the bodycam content to LSPD servers and stops recording</div>
+            <button class="copy-btn" data-target="endBodycamText">Copy</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:30px">
+          <h2 style="margin-bottom:10px;font-size:18px;">Situation Analyzer</h2>
+         <p class="lead" style="font-size: 14px; margin-bottom: 12px; margin-top:0;">
+           Type keywords about the situation (e.g., "stole auto," "cocaine," "evading," "weapon") and click Analyze.
+         </p>
+         <textarea id="situationInput" rows="3" placeholder="e.g. Suspect was evading in a stolen auto, had cocaine and a prohibited weapon..."></textarea>
+         <button id="analyzeBtn" style="margin-top: 12px; width: 100%;">Analyze Situation</button>
+         <div id="analysisResultArea" style="display:none; margin-top: 16px;">
+           <div id="analysisSummary" class="result" style="font-weight: 700; background: linear-gradient(180deg,rgba(14,165,255,0.05),transparent); border: 1px solid rgba(14,165,255,0.1); display:block;"></div>
+           <div id="analysisList"></div>
+         </div>
+         <div id="analysisNotFound" class="result notfound" style="display:none; margin-top: 16px;">
+           No matching crimes found. Try using more specific keywords from the penal code (e.g., "auto" instead of "car").
+         </div>
+      </div>
+
+      <footer style="margin-top:30px">Built from your LEO Penal Code Guide.</footer>
+    </div>
+  </div>
+
+  <div id="towingTab" class="tab-content">
+      </div>
+
+  <div id="fineVehicleTab" class="tab-content">
+      </div>
+
+  <div id="settingsTab" class="tab-content">
+     </div>
+
+   <div id="aboutTab" class="tab-content">
+      </div>
+
+  <div id="situationsFlyout">
+      <button id="situationsToggleBtn">&lt;</button> <div class="flyout-content">
+          <h3>Situations</h3>
+           <button id="lawyerSitBtnFlyout" class="situation-btn">Lawyer Situation</button>
+          <div id="lawyerCommandsFlyout" style="display:none;" class="command-section">
+              <p class="small" style="color: var(--muted); margin-bottom: 10px;">Commands for when a suspect requests a lawyer:</p>
+              <div class="command-item">
+                  <div id="lawyerCmd1_flyout">/me stops bodycam, uploads the footage to secure LSPD servers</div>
+                  <button class="copy-btn" data-target="lawyerCmd1_flyout">Copy</button>
+              </div>
+              <div class="command-item">
+                  <div id="lawyerCmd2_flyout">/do it is successfully uploaded</div>
+                  <button class="copy-btn" data-target="lawyerCmd2_flyout">Copy</button>
+              </div>
+              <div class="command-item">
+                  <div id="lawyerCmd3_flyout">/me displays bodycam footage through PDA</div>
+                  <button class="copy-btn" data-target="lawyerCmd3_flyout">Copy</button>
+              </div>
+          </div>
+          </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

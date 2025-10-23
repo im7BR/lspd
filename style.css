@@ -1,0 +1,227 @@
+:root {
+  /* Dark Theme Variables (Default) */
+  --bg: #0b1220;
+  --card: #0f1724;
+  --card-rgb: 15, 23, 36;
+  --accent: #0ea5ff;
+  --accent-text: #002233;
+  --danger: #ff5555;
+  --danger-text: #330000;
+  --text: #e6eef6;
+  --muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.04);
+  --shadow: rgba(2, 6, 23, 0.6);
+  --gradient-start: #071028;
+  --gradient-end: #081426;
+  --result-bg-start: rgba(255, 255, 255, 0.02);
+  --result-bg-end: transparent;
+  --notfound-text: #ffb4b4;
+  --input-bg: transparent;
+  color-scheme: dark;
+}
+
+/* Light Theme Variables */
+.light-theme {
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --card-rgb: 255, 255, 255;
+  --accent: #0ea5ff;
+  --accent-text: #ffffff;
+  --danger: #ef4444;
+  --danger-text: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(100, 116, 139, 0.2);
+  --gradient-start: #e2e8f0;
+  --gradient-end: #f1f5f9;
+  --result-bg-start: rgba(0, 0, 0, 0.02);
+  --result-bg-end: transparent;
+  --notfound-text: #ef4444;
+  --input-bg: #f8fafc;
+  color-scheme: light;
+}
+
+/* --- Base & General Styles --- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+  margin: 0;
+  padding: 0;
+  padding-top: 80px; /* Space for fixed top buttons */
+  background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 28px 28px 28px;
+  position: relative; /* Keep z-index reference */
+  z-index: 1; /* Content below fixed elements */
+}
+
+h1, h2, h3, p, p.lead, code, .hint, .small, .meta { transition: color 0.3s ease; }
+h1 { font-size: 20px; margin: 0 0 8px; }
+h2 { font-size: 18px; margin-bottom: 10px; }
+h3 { font-size: 16px; margin-bottom: 10px; }
+p { margin-top: 0; margin-bottom: 10px; line-height: 1.6; }
+p.lead { margin: 0 0 20px; color: var(--muted); }
+code { background: rgba(125,125,125,0.1); padding: 2px 5px; border-radius: 4px; font-size: 0.9em;}
+
+.card {
+  background: var(--card); border-radius: 12px; padding: 18px;
+  box-shadow: 0 6px 24px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 30px;
+}
+.card:first-child { margin-top: 0; }
+.row { display: flex; gap: 8px; }
+input[type=text], textarea { /* ... input/textarea styles ... */ }
+button { /* ... base button styles ... */ }
+/* ... other button styles (endDuty, stopTimer, hover, active, disabled) ... */
+.result, .stars, .meta, .small, .hint, .notfound, footer { /* ... result styles ... */ }
+.copy-btn { /* ... copy button styles ... */ }
+
+/* Animation */
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.smooth-show { animation: fadeInDown 0.3s ease-out forwards; }
+
+
+/* --- Fixed Top Buttons --- */
+#homeBtn, #menuToggleBtn, #themeToggleBtn {
+  position: fixed; top: 20px; z-index: 1000; /* High z-index */
+  padding: 8px; background: var(--card); border: 1px solid var(--border); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease-out; /* Use all transition */
+}
+#homeBtn { left: 28px; }
+#themeToggleBtn { left: 88px; }
+#menuToggleBtn { right: 28px; padding: 6px 10px; font-size: 20px; line-height: 1; }
+#homeBtn svg, #themeToggleBtn svg { width: 20px; height: 20px; stroke: var(--muted); transition: stroke 0.3s ease; }
+/* Apply general button hover/active to top buttons */
+#homeBtn:hover, #themeToggleBtn:hover, #menuToggleBtn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); color: var(--accent);}
+#homeBtn:hover svg, #themeToggleBtn:hover svg { stroke: var(--accent); }
+#homeBtn:active, #themeToggleBtn:active, #menuToggleBtn:active { transform: translateY(0px) scale(0.98); filter: brightness(0.95); }
+.icon-moon { display: none; }
+.light-theme .icon-sun { display: none; }
+.light-theme .icon-moon { display: block; }
+
+
+/* --- Tab Content --- */
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeInDown 0.3s ease-out; }
+
+
+/* --- Wizard Styles --- */
+.step-title { margin-bottom: 10px; font-size: 18px; color: var(--accent); }
+.wizard-step { display: none; animation: fadeInDown 0.4s ease-out; }
+.wizard-step.active { display: block; }
+#towingWizardNav button, #fineWizardNav button { width: 140px; }
+
+
+/* --- Slide Menu Styles --- */
+#menuOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001; /* Above top buttons */ opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; }
+#menuOverlay.menu-open { opacity: 1; pointer-events: auto; }
+#slideMenu {
+  position: fixed; top: 0; right: 0; bottom: 0; /* Full height */
+  width: 280px; background: #0d1625; z-index: 1002; /* Highest z-index */
+  transform: translateX(100%); transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+  padding: 20px; padding-top: 70px; /* Add padding for close button */
+  box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; gap: 12px;
+  overflow-y: auto; /* Allow scroll if needed */
+}
+.light-theme #slideMenu { background: #e2e8f0; box-shadow: -10px 0 30px rgba(100, 116, 139, 0.2); }
+#slideMenu.menu-open { transform: translateX(0); }
+#closeMenuBtn {
+    position: absolute; top: 20px; right: 20px; /* Position inside top padding */
+    font-size: 24px; background: transparent; border: none; color: var(--muted); padding: 5px; line-height: 1;
+    transition: color 0.3s ease; z-index: 1003; /* Ensure it's clickable */
+}
+#closeMenuBtn:hover { color: var(--accent); transform: none; filter: none; box-shadow: none; }
+.menu-btn { /* ... existing styles ... */ }
+/* ... menu button hover/active styles ... */
+
+
+/* --- Settings Tab --- */
+#settingsTab label { /* ... */ }
+#settingsTab input[type="radio"] { /* ... */ }
+
+/* --- Shift Timer --- */
+#shiftTimerDisplay { /* ... */ }
+
+/* --- About Tab --- */
+#aboutBackground { /* ... */ }
+#aboutBackground::before { /* ... */ }
+/* ... other about styles ... */
+
+
+/* --- Situations Flyout Styles (REVISED AGAIN) --- */
+#situationsFlyout {
+    position: fixed;
+    top: 80px; /* Align below header buttons */
+    bottom: 20px; /* Space from bottom */
+    right: 0;
+    width: 320px; /* Panel width */
+    background-color: var(--card);
+    border-left: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 12px 0 0 12px;
+    box-shadow: -6px 0 24px var(--shadow);
+    z-index: 999; /* Below header buttons(1000) & menu(1001/1002), above content(1) */
+    transform: translateX(100%); /* Start fully hidden */
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
+    overflow-y: auto;
+}
+#situationsFlyout.flyout-open {
+    transform: translateX(0); /* Slide fully into view */
+}
+#situationsToggleBtn {
+    position: absolute;
+    top: 10px; /* Position near top of panel */
+    left: -40px; /* Position button outside the panel */
+    transform: translateY(0); /* Reset vertical centering */
+    width: 40px;
+    height: 60px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    background: var(--card);
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 60px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: -4px 2px 10px rgba(0,0,0,0.2);
+    filter: none;
+    transition: all 0.2s ease-out;
+    z-index: 1; /* Ensure button is above panel shadow if overlapping */
+}
+#situationsToggleBtn:hover {
+    color: var(--accent);
+    transform: translateY(-2px); /* Add hover lift */
+    filter: brightness(1.1);
+    box-shadow: -4px 4px 12px rgba(0,0,0,0.3);
+}
+#situationsToggleBtn:active {
+     transform: scale(0.98); /* Click effect */
+     filter: brightness(0.95);
+}
+
+/* Ensure content starts below toggle button if needed */
+.flyout-content {
+    padding: 18px;
+    /* No extra top padding needed if button is outside */
+}
+.flyout-content h3 { /* ... styles ... */ }
+.flyout-content .situation-btn { /* ... styles ... */ }
+.flyout-content .command-section { /* ... styles ... */ }
+.flyout-content .command-item { /* ... styles ... */ }
+.flyout-content .command-item div { /* ... styles ... */ }
