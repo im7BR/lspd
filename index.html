@@ -6,11 +6,16 @@
   <title>Penal Code ⭐ Lookup</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body> <button id="homeBtn" title="Go Home">
+<body> <!-- Body tag might get a class added by JS -->
+
+  <!-- Menu & Navigation Buttons -->
+  <button id="homeBtn" title="Go Home">
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
   </button>
   <button id="themeToggleBtn" title="Toggle Theme">
+    <!-- Sun icon -->
     <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <!-- Moon icon -->
     <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
   </button>
   <button id="menuToggleBtn">☰</button>
@@ -25,35 +30,40 @@
     <button class="menu-btn" id="aboutBtn">About</button>
   </div>
 
+  <!-- Home Tab - Active by default -->
   <div id="homeTab" class="tab-content active">
     <div class="container">
       <h1>Penal Code ⭐ Lookup</h1>
       <p class="lead">Type a penal code (for example <code>PC 2.10.6</code> or <code>2.10.6</code>) and press Search — the stars (wanted level) will be shown.</p>
 
+      <!-- Penal Code Lookup Card -->
       <div class="card">
-         <div class="row">
-            <input id="codeInput" type="text" placeholder="Enter penal code (e.g. PC 2.10.6)" autofocus />
-            <button id="searchBtn">Search</button>
+        <div class="row">
+          <input id="codeInput" type="text" placeholder="Enter penal code (e.g. PC 2.10.6)" autofocus />
+          <button id="searchBtn">Search</button>
+        </div>
+        <div id="resultArea" class="result" style="display:none">
+          <div class="stars" id="starDisplay">✨</div>
+          <div>
+            <div id="pcTitle" style="font-weight:700"></div>
+            <div class="meta" id="pcMeta"></div>
           </div>
-          <div id="resultArea" class="result" style="display:none">
-            <div class="stars" id="starDisplay">✨</div>
-            <div>
-              <div id="pcTitle" style="font-weight:700"></div>
-              <div class="meta" id="pcMeta"></div>
-            </div>
-          </div>
-          <div id="notFound" class="result notfound" style="display:none">
-            <div>Penal code not found in the database. Try different formatting (e.g. <code>PC 2.10.6</code>, <code>2.10.6</code>, or <code>2.10</code>).</div>
-          </div>
-          <div class="hint">Tip: you can enter with or without the <code>PC</code> prefix.</div>
+        </div>
+        <div id="notFound" class="result notfound" style="display:none">
+          <div>Penal code not found in the database. Try different formatting (e.g. <code>PC 2.10.6</code>, <code>2.10.6</code>, or <code>2.10</code>).</div>
+        </div>
+        <div class="hint">Tip: you can enter with or without the <code>PC</code> prefix.</div>
       </div>
 
-      <div class="card" style="margin-top:30px">
-         <h2 style="margin-bottom:10px;font-size:18px;">Duty Tools</h2>
+      <!-- Duty Tools Card -->
+      <div class="card">
+        <h2 style="margin-bottom:10px;font-size:18px;">Duty Tools</h2>
         <div class="row" style="margin-bottom:16px">
           <button id="startDutyBtn" style="flex:1">START DUTY</button>
           <button id="endDutyBtn" style="flex:1;background:linear-gradient(90deg,var(--danger),#f63b3b)">END DUTY</button>
         </div>
+
+        <!-- Shift Timer -->
         <div id="shiftTimerContainer" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
             <h3 style="font-size: 16px; color: var(--muted); margin-bottom: 10px;">Shift Timer</h3>
             <div class="row" style="align-items: center;">
@@ -62,6 +72,8 @@
                 <button id="stopTimerBtn" style="width: 100px; background: linear-gradient(90deg, #6b7280, #4b5563); color: white;" disabled>Stop</button>
             </div>
         </div>
+
+        <!-- Start Duty - Bodycam -->
         <div id="bodycamArea" style="margin-top:16px;display:none">
            <p class="small" style="margin-bottom:10px; text-align:center; color: var(--accent);">10-41 message copied! Now activate bodycam.</p>
           <div style="display:flex; align-items:center; justify-content:space-between;">
@@ -73,6 +85,8 @@
             <button class="copy-btn" data-target="bodycam2">Copy</button>
           </div>
         </div>
+
+        <!-- End Duty - Bodycam -->
         <div id="endBodycamArea" style="margin-top:16px;display:none">
           <p class="small" style="margin-bottom:10px; text-align:center; color: var(--accent);">10-42 message copied! Now deactivate bodycam.</p>
           <div style="display:flex; align-items:center; justify-content:space-between;">
@@ -82,8 +96,9 @@
         </div>
       </div>
 
-      <div class="card" style="margin-top:30px">
-          <h2 style="margin-bottom:10px;font-size:18px;">Situation Analyzer</h2>
+      <!-- Situation Analyzer Card -->
+      <div class="card">
+         <h2 style="margin-bottom:10px;font-size:18px;">Situation Analyzer</h2>
          <p class="lead" style="font-size: 14px; margin-bottom: 12px; margin-top:0;">
            Type keywords about the situation (e.g., "stole auto," "cocaine," "evading," "weapon") and click Analyze.
          </p>
@@ -102,40 +117,664 @@
     </div>
   </div>
 
+  <!-- Towing Tab -->
   <div id="towingTab" class="tab-content">
-      </div>
+      <div class="container">
+          <h1>Towing a Vehicle: Step-by-Step</h1>
+          <p class="lead">Follow these steps to correctly tow and impound a vehicle.</p>
+          <div class="card">
+            <div id="towingWizardContainer">
+              <!-- Steps 1-11 for towing -->
+              <div class="wizard-step"><h2 class="step-title">Step 1: Find Vehicle</h2><p>Locate the vehicle that needs to be towed.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 2: Check PDA for Fines</h2><p>Check the vehicle through the PDA and make sure the owner didn't get a fine for the same violation earlier today.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 3: Log Plates/VIN (Screenshot)</h2><p>Type one of the following commands in chat and <strong>take a screenshot</strong>.</p><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="towCmd1">/me Searches the plates through the LSPD database and writes them down.</div><button class="copy-btn" data-target="towCmd1">Copy</button></div></div><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If no plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="towCmd2">/me Kneels down, feels the VIN number under the car and run it through LSPD.</div><button class="copy-btn" data-target="towCmd2">Copy</button></div></div></div>
+              <div class="wizard-step"><h2 class="step-title">Step 4: Check Plate in PDA (Screenshot)</h2><p>Check the license plate in the PDA and <strong>take a screenshot</strong>.</p><p style="margin-top:10px;">If there is no license plate, check the owner's name and <strong>take a screenshot</strong> of that.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 5: Check Fines (Screenshot)</h2><p>Check the owner's fine history in the PDA and <strong>take a screenshot</strong>.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 6: Request Tow</h2><p>Press <code>G</code> on the vehicle and select "Towing vehicle".</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 7: Photograph Vehicle (Screenshot)</h2><p>Take a picture of the vehicle with your phone.</p><p style="margin-top:10px;">Before saving, <strong>take a screenshot</strong> of the photo preview. Then, save the photo to the PDA.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 8: Hook Vehicle</h2><p>Get in your tow truck.</p><p style="margin-top:10px;">While holding <code>CTRL</code>, back up to the vehicle to hook it.</p><p style="margin-top:10px;">Once attached, hold <code>SHIFT</code> to lift it.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 9: Transport to Impound</h2><p>Start driving to the penal parking area next to LSPD HQ.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Step 10: Issue Fine & Impound</h2><p><strong>Before</strong> going into the yellow impound zone, get out and check the vehicle's state value (damage).</p><p style="margin-top:10px;">You are only allowed to give <strong>10%</strong> of the vehicle's state value as a fine.</p><p style="margin-top:10px; color:var(--accent);"><strong>Max Fine:</strong> If 10% is more than <code>$20,000</code>, you must lower the fine to <code>$20,000</code>.</p><p style="margin-top:10px;">Type the reason for the tow/fine and complete the impound.</p></div>
+              <div class="wizard-step"><h2 class="step-title">Procedure Complete</h2><p>You have successfully completed the towing procedure. You can now return to the home screen.</p><button id="restartWizardBtn" style="margin-top: 15px;">Start Over</button></div>
+            </div>
+            <div id="towingWizardNav" class="row" style="margin-top: 20px; justify-content: space-between; align-items:center;">
+              <button id="prevStepBtn">Previous Step</button>
+              <span id="stepCounter" style="color: var(--muted); font-size: 14px;"></span>
+              <button id="nextStepBtn">Next Step</button>
+            </div>
+          </div>
+        </div>
+  </div>
 
+  <!-- Fine Vehicle Tab -->
   <div id="fineVehicleTab" class="tab-content">
+       <div class="container">
+        <h1>Fine Vehicle: Step-by-Step</h1>
+        <p class="lead">Follow these steps to correctly issue a vehicle fine.</p>
+        <div class="card">
+          <div id="fineWizardContainer">
+            <div class="wizard-step"><h2 class="step-title">Step 1: Find Vehicle</h2><p>Locate the vehicle associated with the violation.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 2: Check Owner's Daily Fines</h2><p>Check the owner of the vehicle in the PDA. Make sure they haven't already received a fine for the same violation today. If they have, you cannot issue another fine for it.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 3: Log Plates/VIN (Screenshot)</h2><p>Type one of the following commands in chat and <strong>take a screenshot</strong>.</p><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="fineCmd1">/me Searches the plates through the LSPD database and writes them down.</div><button class="copy-btn" data-target="fineCmd1">Copy</button></div></div><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If no plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="fineCmd2">/me Kneels down, feels the VIN number under the car and run it through LSPD.</div><button class="copy-btn" data-target="fineCmd2">Copy</button></div></div></div>
+            <div class="wizard-step"><h2 class="step-title">Step 4: Check Plate/Owner in PDA (Screenshot)</h2><p>Check the license plate in the PDA and <strong>take a screenshot</strong>.</p><p style="margin-top:10px;">If there is no license plate, check the owner's name and <strong>take a screenshot</strong> of that.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 5: Check Owner's Fines (Screenshot)</h2><p>Check the owner's fine history in the PDA and <strong>take a screenshot</strong>.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 6: Issue Fine</h2><p>Click the button "Issue a Fine" in the PDA and fill in the details for the violation.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 7: Screenshot Confirmation</h2><p>After issuing the fine, <strong>take a screenshot</strong> of the confirmation screen or the updated fine history showing the new fine.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Procedure Complete</h2><p>The fine has been issued and documented.</p><button id="restartFineWizardBtn" style="margin-top: 15px;">Start Over</button></div>
+          </div>
+          <div id="fineWizardNav" class="row" style="margin-top: 20px; justify-content: space-between; align-items:center;">
+            <button id="prevFineStepBtn">Previous Step</button>
+            <span id="fineStepCounter" style="color: var(--muted); font-size: 14px;"></span>
+            <button id="nextFineStepBtn">Next Step</button>
+          </div>
+        </div>
       </div>
+  </div>
 
+  <!-- Settings Tab -->
   <div id="settingsTab" class="tab-content">
-     </div>
-
-   <div id="aboutTab" class="tab-content">
+      <div class="container">
+        <h1>Settings</h1>
+        <p class="lead">Adjust application settings here (saved in your browser).</p>
+        <div class="card">
+          <h2 style="margin-bottom:15px; font-size: 18px;">Preferences</h2>
+          <div style="margin-bottom: 20px;">
+            <label for="settingsBadgeInput" style="display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px;">Default Badge Number:</label>
+            <input id="settingsBadgeInput" type="text" placeholder="Enter your badge #" style="max-width: 200px;"/>
+            <p class="small" style="margin-top: 5px;">This will pre-fill the badge number in Duty Tools.</p>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px;">Theme:</label>
+            <div class="row" style="gap: 15px;">
+              <label style="cursor: pointer; display:flex; align-items:center;">
+                <input type="radio" name="theme" value="dark" id="themeDarkRadio" checked>
+                <span style="margin-left: 8px;">Dark (Default)</span>
+              </label>
+              <label style="cursor: pointer; display:flex; align-items:center;">
+                <input type="radio" name="theme" value="light" id="themeLightRadio">
+                <span style="margin-left: 8px;">Light</span>
+              </label>
+            </div>
+          </div>
+          <button id="saveSettingsBtn" style="width: 150px;">Save Settings</button>
+          <span id="settingsSavedMsg" style="margin-left: 15px; color: var(--accent); font-size: 14px; display: none;">Saved!</span>
+        </div>
       </div>
+  </div>
 
-  <div id="situationsFlyout">
-      <button id="situationsToggleBtn">&lt;</button> <div class="flyout-content">
-          <h3>Situations</h3>
-           <button id="lawyerSitBtnFlyout" class="situation-btn">Lawyer Situation</button>
-          <div id="lawyerCommandsFlyout" style="display:none;" class="command-section">
-              <p class="small" style="color: var(--muted); margin-bottom: 10px;">Commands for when a suspect requests a lawyer:</p>
-              <div class="command-item">
-                  <div id="lawyerCmd1_flyout">/me stops bodycam, uploads the footage to secure LSPD servers</div>
-                  <button class="copy-btn" data-target="lawyerCmd1_flyout">Copy</button>
-              </div>
-              <div class="command-item">
-                  <div id="lawyerCmd2_flyout">/do it is successfully uploaded</div>
-                  <button class="copy-btn" data-target="lawyerCmd2_flyout">Copy</button>
-              </div>
-              <div class="command-item">
-                  <div id="lawyerCmd3_flyout">/me displays bodycam footage through PDA</div>
-                  <button class="copy-btn" data-target="lawyerCmd3_flyout">Copy</button>
+   <!-- About Tab -->
+   <div id="aboutTab" class="tab-content">
+       <div id="aboutBackground">
+          <div class="container about-content">
+              <h1>About This Tool</h1>
+              <div class="card" style="background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(5px);">
+                  <p style="line-height: 1.7; font-size: 15px;">
+                      This tool was developed by a fellow officer to streamline common LSPD procedures and provide quick access to the Penal Code guide.
+                  </p>
+                  <p style="margin-top: 15px; line-height: 1.7; font-size: 15px;">
+                      The goal is to help new and experienced officers alike perform their duties efficiently and accurately, reducing confusion and saving time during critical moments. Whether you need to look up a charge, follow towing procedures, or manage your duty status, this aims to be a reliable partner on patrol.
+                  </p>
+                  <p style="margin-top: 15px; line-height: 1.7; font-size: 15px;">
+                      Stay safe out there.
+                  </p>
               </div>
           </div>
-          </div>
+      </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+```
+
+***
+
+## 2. `style.css`
+
+This is the stable version from *before* we added the flyout styles.
+
+```css
+:root {
+  /* Dark Theme Variables (Default) */
+  --bg: #0b1220;
+  --card: #0f1724;
+  --card-rgb: 15, 23, 36;
+  --accent: #0ea5ff;
+  --accent-text: #002233;
+  --danger: #ff5555;
+  --danger-text: #330000;
+  --text: #e6eef6;
+  --muted: #94a3b8;
+  --border: rgba(255, 255, 255, 0.04);
+  --shadow: rgba(2, 6, 23, 0.6);
+  --gradient-start: #071028;
+  --gradient-end: #081426;
+  --result-bg-start: rgba(255, 255, 255, 0.02);
+  --result-bg-end: transparent;
+  --notfound-text: #ffb4b4;
+  --input-bg: transparent;
+  --button-shadow: rgba(0,0,0,0.2);
+  --button-hover-shadow: rgba(0,0,0,0.3);
+  color-scheme: dark;
+}
+
+/* Light Theme Variables */
+.light-theme {
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --card-rgb: 255, 255, 255;
+  --accent: #0ea5ff;
+  --accent-text: #ffffff;
+  --danger: #ef4444;
+  --danger-text: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(100, 116, 139, 0.2);
+  --gradient-start: #e2e8f0;
+  --gradient-end: #f1f5f9;
+  --result-bg-start: rgba(0, 0, 0, 0.02);
+  --result-bg-end: transparent;
+  --notfound-text: #ef4444;
+  --input-bg: #f8fafc;
+  --button-shadow: rgba(100, 116, 139, 0.2);
+  --button-hover-shadow: rgba(100, 116, 139, 0.3);
+  color-scheme: light;
+}
+
+/* --- Base & General Styles --- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
+  margin: 0;
+  padding: 0;
+  padding-top: 80px; /* Space for fixed top buttons */
+  background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 28px 28px 28px;
+  position: relative;
+  z-index: 1;
+}
+
+h1, h2, h3, p, p.lead, code, .hint, .small, .meta { transition: color 0.3s ease; }
+h1 { font-size: 20px; margin: 0 0 8px; }
+h2 { font-size: 18px; margin-bottom: 10px; }
+h3 { font-size: 16px; margin-bottom: 10px; }
+p { margin-top: 0; margin-bottom: 10px; line-height: 1.6; }
+p.lead { margin: 0 0 20px; color: var(--muted); }
+code { background: rgba(125,125,125,0.1); padding: 2px 5px; border-radius: 4px; font-size: 0.9em;}
+
+.card {
+  background: var(--card); border-radius: 12px; padding: 18px;
+  box-shadow: 0 6px 24px var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 30px;
+}
+.card:first-of-type { margin-top: 0; }
+
+.row { display: flex; gap: 8px; align-items: center; }
+
+input[type=text], textarea {
+  flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--input-bg); color: var(--text); font-size: 16px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+textarea { width: 100%; font-size: 15px; font-family: inherit; resize: none; min-height: 60px; }
+
+/* --- Button Styles --- */
+button {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background-image: linear-gradient(90deg, var(--accent), #3b82f6);
+  background-color: var(--accent);
+  color: var(--accent-text);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-out;
+  box-shadow: 0 2px 4px var(--button-shadow);
+}
+button#endDutyBtn {
+  background-image: linear-gradient(90deg, var(--danger), #f63b3b);
+  background-color: var(--danger);
+  color: var(--danger-text);
+}
+#stopTimerBtn {
+    background-image: linear-gradient(90deg, #6b7280, #4b5563);
+    background-color: #6b7280;
+    color: white;
+}
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px var(--button-hover-shadow);
+}
+button:active:not(:disabled) {
+  transform: translateY(0px) scale(0.98);
+  filter: brightness(0.95);
+  box-shadow: 0 1px 2px var(--button-shadow);
+}
+button:disabled {
+  opacity: .5; cursor: not-allowed; transform: none; filter: none; box-shadow: none;
+  background-image: none;
+  background-color: var(--muted);
+  color: var(--text);
+}
+
+/* --- Other Component Styles --- */
+.result { margin-top: 16px; padding: 14px; border-radius: 10px; background: linear-gradient(180deg, var(--result-bg-start), var(--result-bg-end)); display: flex; align-items: center; gap: 14px; transition: background-color 0.3s ease; }
+.stars { font-size: 28px; }
+.meta { color: var(--muted); font-size: 14px; }
+.small { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.hint { margin-top: 10px; color: var(--muted); }
+.notfound { color: var(--notfound-text); }
+footer { margin-top: 30px; margin-bottom: 20px; color: var(--muted); font-size: 13px; text-align: center; }
+.copy-btn { margin-left: 10px; padding: 4px 8px; border-radius: 6px; background: var(--accent); color: var(--accent-text); font-weight: 600; border: none; cursor: pointer; transition: all 0.2s ease-out; flex-shrink: 0; }
+.copy-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+.copy-btn:active { transform: scale(0.95); filter: brightness(0.9); }
+
+/* Animation */
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.smooth-show { animation: fadeInDown 0.3s ease-out forwards; }
+
+
+/* --- Fixed Top Buttons --- */
+#homeBtn, #menuToggleBtn, #themeToggleBtn {
+  position: fixed; top: 20px; z-index: 1010;
+  padding: 8px; background: var(--card); border: 1px solid var(--border); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s ease-out;
+}
+#homeBtn { left: 20px; }
+#themeToggleBtn { left: 80px; }
+#menuToggleBtn { right: 20px; padding: 6px 10px; font-size: 20px; line-height: 1; }
+#homeBtn svg, #themeToggleBtn svg { width: 20px; height: 20px; stroke: var(--muted); transition: stroke 0.3s ease; }
+#homeBtn:hover, #themeToggleBtn:hover, #menuToggleBtn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 4px 12px var(--button-hover-shadow); color: var(--accent);} /* Use button shadow var */
+#homeBtn:hover svg, #themeToggleBtn:hover svg { stroke: var(--accent); }
+#homeBtn:active, #themeToggleBtn:active, #menuToggleBtn:active { transform: translateY(0px) scale(0.98); filter: brightness(0.95); box-shadow: 0 1px 2px var(--button-shadow); }
+.icon-moon { display: none; }
+.light-theme .icon-sun { display: none; }
+.light-theme .icon-moon { display: block; }
+
+/* --- Tab Content --- */
+.tab-content { display: none; padding-bottom: 20px; }
+.tab-content.active { display: block; animation: fadeInDown 0.3s ease-out; }
+
+/* --- Wizard Styles --- */
+.step-title { margin-bottom: 10px; font-size: 18px; color: var(--accent); }
+.wizard-step { display: none; animation: fadeInDown 0.4s ease-out; }
+.wizard-step.active { display: block; }
+#towingWizardNav button, #fineWizardNav button { width: 140px; }
+
+/* --- Slide Menu Styles --- */
+#menuOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; }
+#menuOverlay.menu-open { opacity: 1; pointer-events: auto; }
+#slideMenu {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 280px; background: #0d1625; z-index: 1002;
+  transform: translateX(100%); transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+  padding: 20px; padding-top: 70px; box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
+}
+.light-theme #slideMenu { background: #e2e8f0; box-shadow: -10px 0 30px rgba(100, 116, 139, 0.2); }
+#slideMenu.menu-open { transform: translateX(0); }
+#closeMenuBtn { position: absolute; top: 20px; right: 20px; z-index: 1003; font-size: 24px; background: transparent; border: none; color: var(--muted); padding: 5px; line-height: 1; transition: color 0.3s ease; }
+#closeMenuBtn:hover { color: var(--accent); transform: none; filter: none; box-shadow: none; }
+.menu-btn {
+  width: 100%; text-align: left; padding: 12px 15px; background: var(--card);
+  border: 1px solid var(--border); color: var(--muted);
+  transition: all 0.2s ease-out; /* Use all transition */
+}
+.menu-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 4px 12px var(--button-hover-shadow); color: var(--text); border-color: var(--accent); }
+.light-theme .menu-btn:hover:not(:disabled) { color: var(--accent); }
+.menu-btn:active:not(:disabled) { transform: translateY(0px) scale(0.98); filter: brightness(0.95); box-shadow: 0 1px 2px var(--button-shadow); }
+
+/* --- Settings Tab --- */
+#settingsTab label { cursor: pointer; display: flex; align-items: center; }
+#settingsTab input[type="radio"] { margin-right: 8px; }
+
+/* --- Shift Timer --- */
+#shiftTimerDisplay { color: var(--text); letter-spacing: 1px; font-size: 20px; font-weight: 600; font-family: monospace; flex: 1; }
+
+/* --- About Tab --- */
+#aboutBackground { position: fixed; inset: 0; background-image: url('about-background.jpg'); background-size: cover; background-position: center center; z-index: 1; }
+#aboutBackground::before { content: ''; position: absolute; inset: 0; background-color: rgba(11, 18, 32, 0.75); z-index: 2; transition: background-color 0.3s ease; }
+.light-theme #aboutBackground::before { background-color: rgba(255, 255, 255, 0.6); }
+#aboutTab .container.about-content { position: relative; z-index: 3; padding-top: 28px; /* Reset padding for about tab */ color: #e6eef6; }
+.light-theme #aboutTab .container.about-content { color: #1e293b; }
+#aboutTab .container.about-content h1 { color: #e6eef6; }
+.light-theme #aboutTab .container.about-content h1 { color: #1e293b; }
+#aboutTab .card { background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(5px); }
+
+/* --- NO Flyout Styles in this version --- */
+```
+
+***
+
+## 3. `script.js`
+
+This is the version from *before* we added the flyout logic.
+
+```javascript
+// --- Penal Code Mapping ---
+const PC_MAP = { /* ... Abridged ... */ };
+
+// State objects for wizards
+const towingWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
+const fineVehicleWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
+
+// --- Helper Functions ---
+const normalize = (input) => input ? input.trim().toUpperCase().replace(/^PC\s*/, '').replace(/\s+/g, '') : '';
+const lookup = (code) => {
+    const key = code.replace(/\s+/g, '');
+    if (PC_MAP[key]) return PC_MAP[key];
+    const parts = key.match(/(\d)(\d{1,2})(\d{1,2})/);
+    if (parts) {
+        const alt = parts[1] + '.' + parts[2] + '.' + parts[3];
+        if (PC_MAP[alt]) return PC_MAP[alt];
+    }
+    const prefix = key.split('.').slice(0, 2).join('.');
+    if (PC_MAP[prefix]) return PC_MAP[prefix];
+    return null;
+};
+const formatTime = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = Math.floor(seconds % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; };
+
+// --- Wizard Step Display Functions ---
+function showTowingStep(stepNumber) {
+    const state = towingWizardState; if (!state.steps || state.steps.length === 0) return;
+    state.currentStep = stepNumber;
+    state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
+    if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
+    if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
+    if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
+}
+function showFineVehicleStep(stepNumber) {
+    const state = fineVehicleWizardState; if (!state.steps || state.steps.length === 0) return;
+    state.currentStep = stepNumber;
+    state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
+    if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
+    if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
+    if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
+}
+
+
+// --- Main Initialization ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Loaded. Initializing...");
+
+    // --- Select ALL elements ---
+    const penalCodeInput = document.getElementById('codeInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultArea = document.getElementById('resultArea');
+    const notFound = document.getElementById('notFound');
+    const starDisplay = document.getElementById('starDisplay');
+    const pcTitle = document.getElementById('pcTitle');
+    const pcMeta = document.getElementById('pcMeta');
+
+    const startDutyBtn = document.getElementById('startDutyBtn');
+    const endDutyBtn = document.getElementById('endDutyBtn');
+    const bodycamArea = document.getElementById('bodycamArea');
+    const endBodycamArea = document.getElementById('endBodycamArea');
+
+    const situationInput = document.getElementById('situationInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const analysisResultArea = document.getElementById('analysisResultArea');
+    const analysisSummary = document.getElementById('analysisSummary');
+    const analysisList = document.getElementById('analysisList');
+    const analysisNotFound = document.getElementById('analysisNotFound');
+
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const slideMenu = document.getElementById('slideMenu');
+    const closeMenuBtn = document.getElementById('closeMenuBtn');
+    const homeBtn = document.getElementById('homeBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const towBtn = document.getElementById('towBtn');
+    const fineBtn = document.getElementById('fineBtn');
+    const arrestBtn = document.getElementById('arrestBtn');
+    const aboutBtn = document.getElementById('aboutBtn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    const settingsBadgeInput = document.getElementById('settingsBadgeInput');
+    const themeDarkRadio = document.getElementById('themeDarkRadio');
+    const themeLightRadio = document.getElementById('themeLightRadio');
+    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+    const settingsSavedMsg = document.getElementById('settingsSavedMsg');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+    const shiftTimerDisplay = document.getElementById('shiftTimerDisplay');
+    const startTimerBtn = document.getElementById('startTimerBtn');
+    const stopTimerBtn = document.getElementById('stopTimerBtn');
+
+    // Simple check if essential elements loaded
+    if (!penalCodeInput || !startDutyBtn || !menuToggleBtn || !tabContents || tabContents.length === 0) {
+        console.error("Essential elements missing! Aborting script setup.");
+        alert("Error loading page components. Please ensure index.html is correct and element IDs match.");
+        return; // Stop script execution
+    }
+
+    // --- Settings ---
+    function applySettings() {
+        const savedBadge = localStorage.getItem('badgeNumber') || '';
+        if (settingsBadgeInput) settingsBadgeInput.value = savedBadge;
+
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (themeDarkRadio) themeDarkRadio.checked = (savedTheme === 'dark');
+        if (themeLightRadio) themeLightRadio.checked = (savedTheme === 'light');
+        document.body.classList.toggle('light-theme', savedTheme === 'light');
+        console.log("Applied theme:", savedTheme);
+    }
+
+    function saveSettings() {
+        if (settingsBadgeInput) localStorage.setItem('badgeNumber', settingsBadgeInput.value.trim());
+        let selectedTheme = (themeLightRadio && themeLightRadio.checked) ? 'light' : 'dark';
+        localStorage.setItem('theme', selectedTheme);
+        applySettings();
+        if (settingsSavedMsg) {
+            settingsSavedMsg.style.display = 'inline';
+            setTimeout(() => { if (settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
+        }
+        console.log("Settings saved.");
+    }
+
+    if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
+    else { console.warn("Save Settings button not found"); }
+
+    // --- Theme Toggle Button ---
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const isLight = document.body.classList.toggle('light-theme');
+            const newTheme = isLight ? 'light' : 'dark';
+            localStorage.setItem('theme', newTheme);
+            if (themeDarkRadio) themeDarkRadio.checked = !isLight;
+            if (themeLightRadio) themeLightRadio.checked = isLight;
+            console.log("Theme toggled to:", newTheme);
+        });
+    } else { console.warn("Theme Toggle button not found"); }
+
+    // --- Menu and Tab Navigation ---
+    function openMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.add('menu-open'); menuOverlay.classList.add('menu-open'); } }
+    function closeMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.remove('menu-open'); menuOverlay.classList.remove('menu-open'); } }
+    function showTab(targetId) {
+        if (!tabContents) return;
+        console.log("Switching to tab:", targetId);
+        tabContents.forEach(tab => {
+             if(tab) tab.classList.toggle('active', tab.id === targetId);
+        });
+        window.scrollTo(0, 0);
+    }
+
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
+    if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
+    if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+    if (homeBtn) homeBtn.addEventListener('click', () => { showTab('homeTab'); closeMenu(); });
+    if (settingsBtn) settingsBtn.addEventListener('click', () => { showTab('settingsTab'); closeMenu(); });
+    if (towBtn) towBtn.addEventListener('click', () => { showTab('towingTab'); closeMenu(); });
+    if (fineBtn) fineBtn.addEventListener('click', () => { showTab('fineVehicleTab'); closeMenu(); });
+    if (aboutBtn) aboutBtn.addEventListener('click', () => { showTab('aboutTab'); closeMenu(); });
+    if (arrestBtn) arrestBtn.addEventListener('click', () => { alert('Arrest guide coming soon!'); closeMenu(); });
+
+    // --- Penal Code Search ---
+    if (searchBtn && penalCodeInput) {
+        searchBtn.addEventListener('click', () => {
+            console.log("Search button clicked");
+            const raw = penalCodeInput.value;
+            const norm = normalize(raw);
+            if (!norm) {
+                 if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+                 if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+                 return;
+            }
+            const res = lookup(norm);
+            if (res) {
+                 if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
+                 if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
+                 if(starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
+                 if(pcTitle) pcTitle.textContent = 'PC ' + norm;
+                 if(pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
+            } else {
+                 if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+                 if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+            }
+        });
+        penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchBtn.click(); });
+    } else { console.warn("Search input or button not found"); }
+
+
+    // --- Duty Tools ---
+     if (startDutyBtn && bodycamArea && endBodycamArea) {
+        startDutyBtn.addEventListener('click', () => {
+            console.log("Start Duty clicked");
+            const savedBadge = localStorage.getItem('badgeNumber');
+            if (!savedBadge || savedBadge.trim() === '') {
+                alert('Please set your Badge Number in the Settings tab first!');
+                showTab('settingsTab'); return;
+            }
+            const now = new Date();
+            const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
+            const text = `${savedBadge} to Dispatch, show me 10-41 at ${ukTime}`;
+            navigator.clipboard.writeText(text);
+            bodycamArea.style.display = 'block'; bodycamArea.classList.add('smooth-show');
+            endBodycamArea.style.display = 'none'; endBodycamArea.classList.remove('smooth-show');
+        });
+    } else { console.warn("Start Duty button or bodycam areas not found"); }
+
+
+    if (endDutyBtn && endBodycamArea && bodycamArea) {
+        endDutyBtn.addEventListener('click', () => {
+             console.log("End Duty clicked");
+             const savedBadge = localStorage.getItem('badgeNumber');
+            if (!savedBadge || savedBadge.trim() === '') {
+                alert('Please set your Badge Number in the Settings tab first!');
+                showTab('settingsTab'); return;
+            }
+            const now = new Date();
+            const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
+            const text = `${savedBadge} to Dispatch, show me 10-42 at ${ukTime}`;
+            navigator.clipboard.writeText(text);
+            endBodycamArea.style.display = 'block'; endBodycamArea.classList.add('smooth-show');
+            bodycamArea.style.display = 'none'; bodycamArea.classList.remove('smooth-show');
+        });
+    } else { console.warn("End Duty button or bodycam areas not found"); }
+
+
+    // --- Situation Analyzer ---
+    if (analyzeBtn && situationInput && analysisList && analysisNotFound && analysisResultArea && analysisSummary) {
+        analyzeBtn.addEventListener('click', () => {
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analyzing...';
+            const text = situationInput.value.trim().toLowerCase();
+            const keywords = text.split(/\s+/).filter(k => k.length > 3);
+            const matches = []; let totalStars = 0;
+            if (keywords.length > 0) {
+                for (const code in PC_MAP) {
+                    const charge = PC_MAP[code]; const description = charge.desc.toLowerCase();
+                    const isMatch = keywords.some(keyword => description.includes(keyword));
+                    if (isMatch) { matches.push({ code, ...charge }); totalStars += charge.count; }
+                }
+            }
+            analysisList.innerHTML = ''; // Clear previous results
+            if (matches.length > 0) {
+                analysisNotFound.style.display = 'none'; analysisNotFound.classList.remove('smooth-show');
+                analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
+                analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
+                matches.forEach(charge => {
+                    const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
+                    el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
+                    analysisList.appendChild(el);
+                });
+            } else {
+                analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
+                analysisNotFound.style.display = 'block'; analysisNotFound.classList.add('smooth-show');
+            }
+            analyzeBtn.disabled = false; analyzeBtn.textContent = 'Analyze Situation';
+        });
+    } else { console.warn("Situation Analyzer elements not found"); }
+
+
+    // --- Shift Timer ---
+    let shiftTimerInterval = null;
+    let shiftStartTime = 0;
+    let shiftElapsedTime = 0;
+    let isTimerRunning = false;
+
+    function updateTimerDisplay() { if (shiftTimerDisplay) shiftTimerDisplay.textContent = formatTime(shiftElapsedTime); }
+    function startTimer() { if (isTimerRunning) return; isTimerRunning = true; shiftStartTime = Date.now() - (shiftElapsedTime * 1000); shiftTimerInterval = setInterval(() => { shiftElapsedTime = Math.floor((Date.now() - shiftStartTime) / 1000); updateTimerDisplay(); }, 1000); if (startTimerBtn) startTimerBtn.disabled = true; if (stopTimerBtn) stopTimerBtn.disabled = false; console.log("Timer started");}
+    function stopTimer() { if (!isTimerRunning) return; isTimerRunning = false; clearInterval(shiftTimerInterval); if (startTimerBtn) startTimerBtn.disabled = false; if (stopTimerBtn) stopTimerBtn.disabled = true; console.log("Timer stopped");}
+    if (startTimerBtn) startTimerBtn.addEventListener('click', startTimer);
+    if (stopTimerBtn) stopTimerBtn.addEventListener('click', stopTimer);
+    updateTimerDisplay(); // Initial display
+
+
+    // --- Wizard Setup ---
+    function setupWizard(state, containerId, prevBtnId, nextBtnId, counterId, restartBtnId, showStepFunc) {
+        const container = document.getElementById(containerId);
+        if (!container) { console.warn(`Wizard container "${containerId}" not found`); return; }
+        state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length;
+        if (state.totalSteps === 0) { console.warn(`No steps found in wizard "${containerId}"`); return; }
+        state.prevBtn = document.getElementById(prevBtnId); state.nextBtn = document.getElementById(nextBtnId);
+        state.counter = document.getElementById(counterId); state.restartBtn = document.getElementById(restartBtnId);
+        if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) showStepFunc(state.currentStep - 1); });
+        if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) showStepFunc(state.currentStep + 1); });
+        if (state.restartBtn) state.restartBtn.addEventListener('click', () => { showStepFunc(1); });
+        showStepFunc(1); // Show first step
+    }
+
+    setupWizard(towingWizardState, 'towingWizardContainer', 'prevStepBtn', 'nextStepBtn', 'stepCounter', 'restartWizardBtn', showTowingStep);
+    setupWizard(fineVehicleWizardState, 'fineWizardContainer', 'prevFineStepBtn', 'nextFineStepBtn', 'fineStepCounter', 'restartFineWizardBtn', showFineVehicleStep);
+
+    // --- Apply Initial Settings ---
+    applySettings();
+
+    // --- Generic Copy Buttons ---
+    document.querySelectorAll('.copy-btn[data-target]').forEach(theBtn => {
+        theBtn.addEventListener('click', () => {
+            const targetId = theBtn.dataset.target;
+            const target = document.getElementById(targetId);
+            if (target) {
+                navigator.clipboard.writeText(target.textContent);
+                const originalText = theBtn.textContent;
+                if (originalText.toLowerCase() !== 'copied!') {
+                    theBtn.textContent = 'Copied!';
+                    setTimeout(() => { theBtn.textContent = originalText; }, 1000);
+                }
+            } else {
+                console.warn(`Copy target not found: ${targetId}`);
+            }
+        });
+    });
+
+    // Home tab is active by default in HTML
+    console.log("Initialization complete.");
+
+}); // End of DOMContentLoaded
+
