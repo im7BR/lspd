@@ -1,9 +1,6 @@
-<!doctype html>
-<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <!-- Updated Title -->
   <title>LSPD helper</title>
   <link rel="icon" type="image/png" href="favicon.png">
 
@@ -17,14 +14,16 @@
   <meta property="og:url" content="https://im7br.github.io/lspd/">
   <meta property="og:title" content="LSPD helper">
   <meta property="og:description" content="This website made by an LSPD officer, its goal is to help officers on their duty.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/im7BR/lspd/refs/heads/main/favicon.png">
+  <!-- Corrected Image URL -->
+  <meta property="og:image" content="https://im7br.github.io/lspd/favicon.png">
 
   <!-- Twitter -->
-  <meta property="twitter:card" content="summary"> <!-- Changed to summary for small icon -->
+  <meta property="twitter:card" content="summary">
   <meta property="twitter:url" content="https://im7br.github.io/lspd/">
   <meta property="twitter:title" content="LSPD helper">
   <meta property="twitter:description" content="This website made by an LSPD officer, its goal is to help officers on their duty.">
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/im7BR/lspd/refs/heads/main/favicon.png">
+  <!-- Corrected Image URL -->
+  <meta property="twitter:image" content="https://im7br.github.io/lspd/favicon.png">
 
   <!-- Optional: Theme Color -->
   <meta name="theme-color" content="#0ea5ff">
@@ -32,223 +31,4 @@
 
   <link rel="stylesheet" href="style.css">
 </head>
-<body> <!-- Body tag might get a class added by JS -->
-
-  <!-- Menu & Navigation Buttons -->
-  <button id="homeBtn" title="Go Home">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-  </button>
-  <button id="themeToggleBtn" title="Toggle Theme">
-    <!-- Sun icon -->
-    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-    <!-- Moon icon -->
-    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-  </button>
-  <button id="menuToggleBtn">☰</button>
-  <div id="menuOverlay"></div>
-  <div id="slideMenu">
-    <button id="closeMenuBtn">×</button>
-    <h3 style="margin: 20px 0 0; color: var(--accent);">Menu</h3>
-    <button class="menu-btn" id="settingsBtn">Settings</button>
-    <button class="menu-btn" id="towBtn">Tow Vehicle</button>
-    <button class="menu-btn" id="fineBtn">Fine Vehicle</button>
-    <button class="menu-btn" id="arrestBtn">Arrest</button>
-    <button class="menu-btn" id="aboutBtn">About</button>
-  </div>
-
-  <!-- Home Tab - Active by default -->
-  <div id="homeTab" class="tab-content active">
-    <div class="container">
-      <h1>Penal Code ⭐ Lookup</h1>
-      <p class="lead">Type a penal code (for example <code>PC 2.10.6</code> or <code>2.10.6</code>) and press Search — the stars (wanted level) will be shown.</p>
-
-      <!-- Penal Code Lookup Card -->
-      <div class="card">
-        <div class="row">
-          <input id="codeInput" type="text" placeholder="Enter penal code (e.g. PC 2.10.6)" autofocus />
-          <button id="searchBtn">Search</button>
-        </div>
-        <div id="resultArea" class="result" style="display:none">
-          <div class="stars" id="starDisplay">✨</div>
-          <div>
-            <div id="pcTitle" style="font-weight:700"></div>
-            <div class="meta" id="pcMeta"></div>
-          </div>
-        </div>
-        <div id="notFound" class="result notfound" style="display:none">
-          <div>Penal code not found in the database. Try different formatting (e.g. <code>PC 2.10.6</code>, <code>2.10.6</code>, or <code>2.10</code>).</div>
-        </div>
-        <div class="hint">Tip: you can enter with or without the <code>PC</code> prefix.</div>
-      </div>
-
-      <!-- Duty Tools Card -->
-      <div class="card">
-        <h2 style="margin-bottom:10px;font-size:18px;">Duty Tools</h2>
-        <div class="row" style="margin-bottom:16px">
-          <button id="startDutyBtn" style="flex:1">START DUTY</button>
-          <button id="endDutyBtn" style="flex:1;background:linear-gradient(90deg,var(--danger),#f63b3b)">END DUTY</button>
-        </div>
-
-        <!-- Shift Timer -->
-        <div id="shiftTimerContainer" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
-            <h3 style="font-size: 16px; color: var(--muted); margin-bottom: 10px;">Shift Timer</h3>
-            <div class="row" style="align-items: center;">
-                <span id="shiftTimerDisplay" style="font-size: 20px; font-weight: 600; font-family: monospace; flex: 1;">00:00:00</span>
-                <button id="startTimerBtn" style="width: 100px;">Start</button>
-                <button id="stopTimerBtn" style="width: 100px; background: linear-gradient(90deg, #6b7280, #4b5563); color: white;" disabled>Stop</button>
-            </div>
-        </div>
-
-        <!-- Start Duty - Bodycam -->
-        <div id="bodycamArea" style="margin-top:16px;display:none">
-           <p class="small" style="margin-bottom:10px; text-align:center; color: var(--accent);">10-41 message copied! Now activate bodycam.</p>
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <div id="bodycam1">/me takes out Bodycam, turns it on and checks for the red light</div>
-            <button class="copy-btn" data-target="bodycam1">Copy</button>
-          </div>
-          <div style="margin-top:10px; display:flex; align-items:center; justify-content:space-between;">
-            <div id="bodycam2">/do It is recording, bodycam is ballistic and water proof</div>
-            <button class="copy-btn" data-target="bodycam2">Copy</button>
-          </div>
-        </div>
-
-        <!-- End Duty - Bodycam -->
-        <div id="endBodycamArea" style="margin-top:16px;display:none">
-          <p class="small" style="margin-bottom:10px; text-align:center; color: var(--accent);">10-42 message copied! Now deactivate bodycam.</p>
-          <div style="display:flex; align-items:center; justify-content:space-between;">
-            <div id="endBodycamText">/do uploads the bodycam content to LSPD servers and stops recording</div>
-            <button class="copy-btn" data-target="endBodycamText">Copy</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Situation Analyzer Card -->
-      <div class="card">
-         <h2 style="margin-bottom:10px;font-size:18px;">Situation Analyzer</h2>
-         <p class="lead" style="font-size: 14px; margin-bottom: 12px; margin-top:0;">
-           Type keywords about the situation (e.g., "stole auto," "cocaine," "evading," "weapon") and click Analyze.
-         </p>
-         <textarea id="situationInput" rows="3" placeholder="e.g. Suspect was evading in a stolen auto, had cocaine and a prohibited weapon..."></textarea>
-         <button id="analyzeBtn" style="margin-top: 12px; width: 100%;">Analyze Situation</button>
-         <div id="analysisResultArea" style="display:none; margin-top: 16px;">
-           <div id="analysisSummary" class="result" style="font-weight: 700; background: linear-gradient(180deg,rgba(14,165,255,0.05),transparent); border: 1px solid rgba(14,165,255,0.1); display:block;"></div>
-           <div id="analysisList"></div>
-         </div>
-         <div id="analysisNotFound" class="result notfound" style="display:none; margin-top: 16px;">
-           No matching crimes found. Try using more specific keywords from the penal code (e.g., "auto" instead of "car").
-         </div>
-      </div>
-
-      <footer style="margin-top:30px">Built from your LEO Penal Code Guide.</footer>
-    </div>
-  </div>
-
-  <!-- Towing Tab -->
-  <div id="towingTab" class="tab-content">
-      <div class="container">
-          <h1>Towing a Vehicle: Step-by-Step</h1>
-          <p class="lead">Follow these steps to correctly tow and impound a vehicle.</p>
-          <div class="card">
-            <div id="towingWizardContainer">
-              <!-- Steps 1-11 for towing -->
-              <div class="wizard-step"><h2 class="step-title">Step 1: Find Vehicle</h2><p>Locate the vehicle that needs to be towed.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 2: Check PDA for Fines</h2><p>Check the vehicle through the PDA and make sure the owner didn't get a fine for the same violation earlier today.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 3: Log Plates/VIN (Screenshot)</h2><p>Type one of the following commands in chat and <strong>take a screenshot</strong>.</p><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="towCmd1">/me Searches the plates through the LSPD database and writes them down.</div><button class="copy-btn" data-target="towCmd1">Copy</button></div></div><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If no plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="towCmd2">/me Kneels down, feels the VIN number under the car and run it through LSPD.</div><button class="copy-btn" data-target="towCmd2">Copy</button></div></div></div>
-              <div class="wizard-step"><h2 class="step-title">Step 4: Check Plate in PDA (Screenshot)</h2><p>Check the license plate in the PDA and <strong>take a screenshot</strong>.</p><p style="margin-top:10px;">If there is no license plate, check the owner's name and <strong>take a screenshot</strong> of that.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 5: Check Fines (Screenshot)</h2><p>Check the owner's fine history in the PDA and <strong>take a screenshot</strong>.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 6: Request Tow</h2><p>Press <code>G</code> on the vehicle and select "Towing vehicle".</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 7: Photograph Vehicle (Screenshot)</h2><p>Take a picture of the vehicle with your phone.</p><p style="margin-top:10px;">Before saving, <strong>take a screenshot</strong> of the photo preview. Then, save the photo to the PDA.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 8: Hook Vehicle</h2><p>Get in your tow truck.</p><p style="margin-top:10px;">While holding <code>CTRL</code>, back up to the vehicle to hook it.</p><p style="margin-top:10px;">Once attached, hold <code>SHIFT</code> to lift it.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 9: Transport to Impound</h2><p>Start driving to the penal parking area next to LSPD HQ.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Step 10: Issue Fine & Impound</h2><p><strong>Before</strong> going into the yellow impound zone, get out and check the vehicle's state value (damage).</p><p style="margin-top:10px;">You are only allowed to give <strong>10%</strong> of the vehicle's state value as a fine.</p><p style="margin-top:10px; color:var(--accent);"><strong>Max Fine:</strong> If 10% is more than <code>$20,000</code>, you must lower the fine to <code>$20,000</code>.</p><p style="margin-top:10px;">Type the reason for the tow/fine and complete the impound.</p></div>
-              <div class="wizard-step"><h2 class="step-title">Procedure Complete</h2><p>You have successfully completed the towing procedure. You can now return to the home screen.</p><button id="restartWizardBtn" style="margin-top: 15px;">Start Over</button></div>
-            </div>
-            <div id="towingWizardNav" class="row" style="margin-top: 20px; justify-content: space-between; align-items:center;">
-              <button id="prevStepBtn">Previous Step</button>
-              <span id="stepCounter" style="color: var(--muted); font-size: 14px;"></span>
-              <button id="nextStepBtn">Next Step</button>
-            </div>
-          </div>
-        </div>
-  </div>
-
-  <!-- Fine Vehicle Tab -->
-  <div id="fineVehicleTab" class="tab-content">
-       <div class="container">
-        <h1>Fine Vehicle: Step-by-Step</h1>
-        <p class="lead">Follow these steps to correctly issue a vehicle fine.</p>
-        <div class="card">
-          <div id="fineWizardContainer">
-            <div class="wizard-step"><h2 class="step-title">Step 1: Find Vehicle</h2><p>Locate the vehicle associated with the violation.</p></div>
-            <div class="wizard-step"><h2 class="step-title">Step 2: Check Owner's Daily Fines</h2><p>Check the owner of the vehicle in the PDA. Make sure they haven't already received a fine for the same violation today. If they have, you cannot issue another fine for it.</p></div>
-            <div class="wizard-step"><h2 class="step-title">Step 3: Log Plates/VIN (Screenshot)</h2><p>Type one of the following commands in chat and <strong>take a screenshot</strong>.</p><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="fineCmd1">/me Searches the plates through the LSPD database and writes them down.</div><button class="copy-btn" data-target="fineCmd1">Copy</button></div></div><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If no plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="fineCmd2">/me Kneels down, feels the VIN number under the car and run it through LSPD.</div><button class="copy-btn" data-target="fineCmd2">Copy</button></div></div></div>
-            <div class="wizard-step"><h2 class="step-title">Step 4: Check Plate/Owner in PDA (Screenshot)</h2><p>Check the license plate in the PDA and <strong>take a screenshot</strong>.</p><p style="margin-top:10px;">If there is no license plate, check the owner's name and <strong>take a screenshot</strong> of that.</p></div>
-            <div class="wizard-step"><h2 class="step-title">Step 5: Check Owner's Fines (Screenshot)</h2><p>Check the owner's fine history in the PDA and <strong>take a screenshot</strong>.</p></div>
-            <div class="wizard-step"><h2 class="step-title">Step 6: Issue Fine</h2><p>Click the button "Issue a Fine" in the PDA and fill in the details for the violation.</p></div>
-            <div class="wizard-step"><h2 class="step-title">Step 7: Screenshot Confirmation</h2><p>After issuing the fine, <strong>take a screenshot</strong> of the confirmation screen or the updated fine history showing the new fine.</p></div>
-            <div class="wizard-step"><h2 class="step-title">Procedure Complete</h2><p>The fine has been issued and documented.</p><button id="restartFineWizardBtn" style="margin-top: 15px;">Start Over</button></div>
-          </div>
-          <div id="fineWizardNav" class="row" style="margin-top: 20px; justify-content: space-between; align-items:center;">
-            <button id="prevFineStepBtn">Previous Step</button>
-            <span id="fineStepCounter" style="color: var(--muted); font-size: 14px;"></span>
-            <button id="nextFineStepBtn">Next Step</button>
-          </div>
-        </div>
-      </div>
-  </div>
-
-  <!-- Settings Tab -->
-  <div id="settingsTab" class="tab-content">
-      <div class="container">
-        <h1>Settings</h1>
-        <p class="lead">Adjust application settings here (saved in your browser).</p>
-        <div class="card">
-          <h2 style="margin-bottom:15px; font-size: 18px;">Preferences</h2>
-          <div style="margin-bottom: 20px;">
-            <label for="settingsBadgeInput" style="display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px;">Default Badge Number:</label>
-            <input id="settingsBadgeInput" type="text" placeholder="Enter your badge #" style="max-width: 200px;"/>
-            <p class="small" style="margin-top: 5px;">This will pre-fill the badge number in Duty Tools.</p>
-          </div>
-          <div style="margin-bottom: 20px;">
-            <label style="display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px;">Theme:</label>
-            <div class="row" style="gap: 15px;">
-              <label style="cursor: pointer; display:flex; align-items:center;">
-                <input type="radio" name="theme" value="dark" id="themeDarkRadio" checked>
-                <span style="margin-left: 8px;">Dark (Default)</span>
-              </label>
-              <label style="cursor: pointer; display:flex; align-items:center;">
-                <input type="radio" name="theme" value="light" id="themeLightRadio">
-                <span style="margin-left: 8px;">Light</span>
-              </label>
-            </div>
-          </div>
-          <button id="saveSettingsBtn" style="width: 150px;">Save Settings</button>
-          <span id="settingsSavedMsg" style="margin-left: 15px; color: var(--accent); font-size: 14px; display: none;">Saved!</span>
-        </div>
-      </div>
-  </div>
-
-   <!-- About Tab -->
-   <div id="aboutTab" class="tab-content">
-       <div id="aboutBackground">
-          <div class="container about-content">
-              <h1>About This Tool</h1>
-              <div class="card" style="background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(5px);">
-                  <p style="line-height: 1.7; font-size: 15px;">
-                      This website made by an LSPD officer, its goal is to help officers on their duty.
-                  </p>
-                  <p style="margin-top: 15px; line-height: 1.7; font-size: 15px;">
-                      The goal is to help new and experienced officers alike perform their duties efficiently and accurately, reducing confusion and saving time during critical moments. Whether you need to look up a charge, follow towing procedures, or manage your duty status, this aims to be a reliable partner on patrol.
-                  </p>
-                  <p style="margin-top: 15px; line-height: 1.7; font-size: 15px;">
-                      Stay safe out there.
-                  </p>
-              </div>
-          </div>
-      </div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
 
