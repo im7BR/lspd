@@ -48,21 +48,20 @@
 body {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;
   margin: 0;
-  padding: 0;
-  padding-top: 80px; /* Space for fixed top buttons */
+  padding: 80px 0 0 0; /* Add top padding only */
   background: linear-gradient(180deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
   color: var(--text);
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
-  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
 .container {
   max-width: 780px;
   margin: 0 auto;
-  padding: 0 28px 28px 28px;
-  position: relative; /* Keep z-index reference */
-  z-index: 1; /* Content below fixed elements */
+  padding: 28px; /* Consistent padding inside container */
+  position: relative;
+  z-index: 1;
 }
 
 h1, h2, h3, p, p.lead, code, .hint, .small, .meta { transition: color 0.3s ease; }
@@ -77,14 +76,16 @@ code { background: rgba(125,125,125,0.1); padding: 2px 5px; border-radius: 4px; 
   background: var(--card); border-radius: 12px; padding: 18px;
   box-shadow: 0 6px 24px var(--shadow);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 30px;
+  margin-bottom: 30px; /* Space between cards */
 }
-.card:first-child { margin-top: 0; }
-.row { display: flex; gap: 8px; }
+/* No margin-top needed if using margin-bottom */
+
+.row { display: flex; gap: 8px; align-items: center; /* Vertically align items in rows */ }
 input[type=text], textarea { /* ... input/textarea styles ... */ }
 button { /* ... base button styles ... */ }
 /* ... other button styles (endDuty, stopTimer, hover, active, disabled) ... */
-.result, .stars, .meta, .small, .hint, .notfound, footer { /* ... result styles ... */ }
+.result, .stars, .meta, .small, .hint, .notfound { /* ... result styles ... */ }
+footer { margin-top: 30px; margin-bottom: 20px; color: var(--muted); font-size: 13px; text-align: center; }
 .copy-btn { /* ... copy button styles ... */ }
 
 /* Animation */
@@ -94,131 +95,109 @@ button { /* ... base button styles ... */ }
 
 /* --- Fixed Top Buttons --- */
 #homeBtn, #menuToggleBtn, #themeToggleBtn {
-  position: fixed; top: 20px; z-index: 1000; /* High z-index */
+  position: fixed; top: 20px; z-index: 1010; /* Highest z-index for controls */
   padding: 8px; background: var(--card); border: 1px solid var(--border); color: var(--muted);
   display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s ease-out; /* Use all transition */
+  transition: all 0.2s ease-out;
 }
-#homeBtn { left: 28px; }
-#themeToggleBtn { left: 88px; }
-#menuToggleBtn { right: 28px; padding: 6px 10px; font-size: 20px; line-height: 1; }
-#homeBtn svg, #themeToggleBtn svg { width: 20px; height: 20px; stroke: var(--muted); transition: stroke 0.3s ease; }
-/* Apply general button hover/active to top buttons */
-#homeBtn:hover, #themeToggleBtn:hover, #menuToggleBtn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); color: var(--accent);}
-#homeBtn:hover svg, #themeToggleBtn:hover svg { stroke: var(--accent); }
-#homeBtn:active, #themeToggleBtn:active, #menuToggleBtn:active { transform: translateY(0px) scale(0.98); filter: brightness(0.95); }
+#homeBtn { left: 20px; }
+#themeToggleBtn { left: 80px; }
+#menuToggleBtn { right: 20px; padding: 6px 10px; font-size: 20px; line-height: 1; }
+/* ... Top button hover/active/icon styles ... */
 .icon-moon { display: none; }
 .light-theme .icon-sun { display: none; }
 .light-theme .icon-moon { display: block; }
 
-
 /* --- Tab Content --- */
-.tab-content { display: none; }
+.tab-content { display: none; padding-bottom: 20px; /* Add bottom padding to tabs */}
 .tab-content.active { display: block; animation: fadeInDown 0.3s ease-out; }
 
-
 /* --- Wizard Styles --- */
-.step-title { margin-bottom: 10px; font-size: 18px; color: var(--accent); }
-.wizard-step { display: none; animation: fadeInDown 0.4s ease-out; }
-.wizard-step.active { display: block; }
-#towingWizardNav button, #fineWizardNav button { width: 140px; }
+/* ... existing wizard styles ... */
 
-
-/* --- Slide Menu Styles --- */
-#menuOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001; /* Above top buttons */ opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; }
+/* --- Slide Menu Styles (Right) --- */
+#menuOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1001; opacity: 0; transition: opacity 0.3s ease-in-out; pointer-events: none; }
 #menuOverlay.menu-open { opacity: 1; pointer-events: auto; }
 #slideMenu {
-  position: fixed; top: 0; right: 0; bottom: 0; /* Full height */
-  width: 280px; background: #0d1625; z-index: 1002; /* Highest z-index */
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 280px; background: #0d1625; z-index: 1002;
   transform: translateX(100%); transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-  padding: 20px; padding-top: 70px; /* Add padding for close button */
-  box-shadow: -10px 0 30px rgba(0,0,0,0.3);
-  display: flex; flex-direction: column; gap: 12px;
-  overflow-y: auto; /* Allow scroll if needed */
+  padding: 20px; padding-top: 70px; box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; gap: 12px; overflow-y: auto;
 }
 .light-theme #slideMenu { background: #e2e8f0; box-shadow: -10px 0 30px rgba(100, 116, 139, 0.2); }
 #slideMenu.menu-open { transform: translateX(0); }
-#closeMenuBtn {
-    position: absolute; top: 20px; right: 20px; /* Position inside top padding */
-    font-size: 24px; background: transparent; border: none; color: var(--muted); padding: 5px; line-height: 1;
-    transition: color 0.3s ease; z-index: 1003; /* Ensure it's clickable */
-}
-#closeMenuBtn:hover { color: var(--accent); transform: none; filter: none; box-shadow: none; }
+#closeMenuBtn { position: absolute; top: 20px; right: 20px; z-index: 1003; /* ... other close button styles ... */ }
 .menu-btn { /* ... existing styles ... */ }
 /* ... menu button hover/active styles ... */
 
-
 /* --- Settings Tab --- */
-#settingsTab label { /* ... */ }
-#settingsTab input[type="radio"] { /* ... */ }
+/* ... existing settings styles ... */
 
 /* --- Shift Timer --- */
-#shiftTimerDisplay { /* ... */ }
+/* ... existing shift timer styles ... */
 
 /* --- About Tab --- */
-#aboutBackground { /* ... */ }
-#aboutBackground::before { /* ... */ }
-/* ... other about styles ... */
+/* ... existing about styles ... */
 
 
-/* --- Situations Flyout Styles (REVISED AGAIN) --- */
+/* --- Situations Flyout Styles (Right) --- */
 #situationsFlyout {
     position: fixed;
-    top: 80px; /* Align below header buttons */
-    bottom: 20px; /* Space from bottom */
+    top: 80px; /* Below header */
+    bottom: 20px;
     right: 0;
-    width: 320px; /* Panel width */
+    width: 320px;
     background-color: var(--card);
     border-left: 1px solid var(--border);
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     border-radius: 12px 0 0 12px;
     box-shadow: -6px 0 24px var(--shadow);
-    z-index: 999; /* Below header buttons(1000) & menu(1001/1002), above content(1) */
-    transform: translateX(100%); /* Start fully hidden */
+    z-index: 999; /* Below header buttons, Above content */
+    transform: translateX(calc(100% - 40px)); /* Start mostly hidden showing only button width */
     transition: transform 0.3s ease-in-out, background-color 0.3s ease, border-color 0.3s ease;
-    overflow-y: auto;
+    overflow-y: auto; /* Allow scrolling inside */
 }
 #situationsFlyout.flyout-open {
     transform: translateX(0); /* Slide fully into view */
 }
+
 #situationsToggleBtn {
-    position: absolute;
-    top: 10px; /* Position near top of panel */
-    left: -40px; /* Position button outside the panel */
-    transform: translateY(0); /* Reset vertical centering */
-    width: 40px;
+    position: absolute; /* Relative to the flyout panel */
+    top: 0;
+    left: 0; /* Position at the left edge of the panel */
+    width: 40px; /* Width of the visible part when closed */
     height: 60px;
     padding: 0;
-    border: 1px solid var(--border);
-    border-right: none;
-    border-radius: 8px 0 0 8px;
+    border: none;
+    border-right: 1px solid var(--border); /* Separator line */
+    border-radius: 12px 0 0 0; /* Match panel corner */
     background: var(--card);
     color: var(--muted);
     font-size: 20px;
     line-height: 60px;
     text-align: center;
     cursor: pointer;
-    box-shadow: -4px 2px 10px rgba(0,0,0,0.2);
-    filter: none;
+    box-shadow: none;
     transition: all 0.2s ease-out;
-    z-index: 1; /* Ensure button is above panel shadow if overlapping */
+    z-index: 2; /* Ensure button is clickable above content */
 }
 #situationsToggleBtn:hover {
     color: var(--accent);
-    transform: translateY(-2px); /* Add hover lift */
-    filter: brightness(1.1);
-    box-shadow: -4px 4px 12px rgba(0,0,0,0.3);
+    background-color: rgba(var(--accent-rgb, 14, 165, 255), 0.1);
+    transform: none; /* No vertical movement */
+    filter: none;
+    box-shadow: none;
 }
 #situationsToggleBtn:active {
-     transform: scale(0.98); /* Click effect */
-     filter: brightness(0.95);
+    transform: scale(0.98); /* Click effect */
+    filter: brightness(0.95);
 }
 
-/* Ensure content starts below toggle button if needed */
 .flyout-content {
     padding: 18px;
-    /* No extra top padding needed if button is outside */
+    padding-top: 70px; /* Space below the toggle button */
 }
 .flyout-content h3 { /* ... styles ... */ }
 .flyout-content .situation-btn { /* ... styles ... */ }
