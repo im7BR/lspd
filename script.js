@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const towBtn = document.getElementById('towBtn');
     const fineBtn = document.getElementById('fineBtn');
     const arrestBtn = document.getElementById('arrestBtn');
+    const importantCmdBtn = document.getElementById('importantCmdBtn'); // Added
     const aboutBtn = document.getElementById('aboutBtn');
     const tabContents = document.querySelectorAll('.tab-content');
 
@@ -268,8 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (settingsBtn) settingsBtn.addEventListener('click', () => { showTab('settingsTab'); closeMenu(); });
     if (towBtn) towBtn.addEventListener('click', () => { showTab('towingTab'); closeMenu(); });
     if (fineBtn) fineBtn.addEventListener('click', () => { showTab('fineVehicleTab'); closeMenu(); });
-    if (aboutBtn) aboutBtn.addEventListener('click', () => { showTab('aboutTab'); closeMenu(); });
     if (arrestBtn) arrestBtn.addEventListener('click', () => { alert('Arrest guide coming soon!'); closeMenu(); });
+    if (importantCmdBtn) importantCmdBtn.addEventListener('click', () => { showTab('importantCmdTab'); closeMenu(); }); // Added listener
+    if (aboutBtn) aboutBtn.addEventListener('click', () => { showTab('aboutTab'); closeMenu(); });
 
     // --- Penal Code Search ---
     if (searchBtn && penalCodeInput) {
@@ -294,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                  if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
             }
         });
-        penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter' && searchBtn) searchBtn.click(); }); // Added null check
+        penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter' && searchBtn) searchBtn.click(); });
     } else { console.warn("Search input or button not found"); }
 
 
