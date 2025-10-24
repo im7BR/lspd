@@ -267,3 +267,63 @@ footer { margin-top: 30px; margin-bottom: 20px; color: var(--muted); font-size: 
     flex-shrink: 0; /* Prevent button shrinking */
 }
 
+/* --- Responsive Styles (Mobile) --- */
+@media (max-width: 768px) {
+
+  /* Make padding smaller for mobile */
+  body {
+    padding-top: 70px; /* Tighter header space */
+  }
+  .container {
+    padding-left: 15px; /* Tighter side padding */
+    padding-right: 15px;
+  }
+  
+  /* Fix overlapping top buttons */
+  #homeBtn {
+    left: 15px; /* Closer to edge */
+  }
+  #themeToggleBtn {
+    left: 70px; /* Closer to home button */
+  }
+  #menuToggleBtn {
+    right: 15px; /* Closer to edge */
+  }
+  
+  /* Make cards less padded */
+  .card {
+    padding: 15px;
+  }
+  
+  /* Stack wizard buttons */
+  #towingWizardNav,
+  #fineWizardNav {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px;
+  }
+  
+  #towingWizardNav button,
+  #fineWizardNav button {
+    width: 100%; /* Make buttons full width */
+  }
+  
+  /* Stack shift timer buttons */
+  #shiftTimerContainer .row {
+      flex-direction: column; /* Stack timer and buttons */
+      align-items: stretch; /* Make buttons full width */
+  }
+  #shiftTimerContainer span {
+      text-align: center; /* Center the time */
+      margin-bottom: 10px;
+  }
+  #shiftTimerContainer button {
+      width: 100%;
+  }
+
+  /* Make slide-out menu full width */
+  #slideMenu {
+      width: 100%;
+      max-width: 320px; /* Optional: set a max */
+  }
+}
+
