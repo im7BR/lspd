@@ -87,7 +87,7 @@ const PC_MAP = {
     "3.7": {stars:'⭐⭐',count:2,fine:'$20,000',desc:'Illegal Gambling'},
     "3.8.1": {stars:'⭐⭐',count:2,fine:'$35,000',desc:'Impersonating a public Servant'},
     "3.8.2": {stars:'⭐⭐⭐',count:3,fine:'$35,000',desc:'Impersonating a law enforcement Officer'},
-    "3.9.1": {stars:'⭐⭐⭐',count:3,fine:'$25,0M00',desc:'Breach of electoral silence'},
+    "3.9.1": {stars:'⭐⭐⭐',count:3,fine:'$25,000',desc:'Breach of electoral silence'},
     "3.9.2": {stars:'⭐⭐⭐⭐',count:4,fine:'$50,000',desc:'Breach of electoral silence at the voting booth'},
     "3.9.3": {stars:'⭐⭐⭐⭐',count:4,fine:'$35,000',desc:'Blocking a voting site'},
     "3.9.4": {stars:'⭐⭐⭐⭐',count:4,fine:'$35,000',desc:'Illegal persuasion of votes'},
@@ -131,6 +131,7 @@ const fineVehicleWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevB
 // --- Helper Functions (Defined Globally) ---
 const normalize = (input) => input ? input.trim().toUpperCase().replace(/^PC\s*/, '').replace(/\s+/g, '') : '';
 const lookup = (code) => {
+    // This is the full lookup logic
     const key = code.replace(/\s+/g, '');
     if (PC_MAP[key]) return PC_MAP[key];
     const parts = key.match(/(\d)(\d{1,2})(\d{1,2})/);
@@ -142,18 +143,31 @@ const lookup = (code) => {
     if (PC_MAP[prefix]) return PC_MAP[prefix];
     return null;
 };
-const formatTime = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = Math.floor(seconds % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; };
+const formatTime = (seconds) => { 
+    const h = Math.floor(seconds / 3600); 
+    const m = Math.floor((seconds % 3600) / 60); 
+    const s = Math.floor(seconds % 60); 
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; 
+};
 
 function showWizardStep(state, stepNumber) {
     if (!state.steps || state.steps.length === 0) return;
     state.currentStep = stepNumber;
-    state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
+    state.steps.forEach((step, index) => { 
+        if(step) step.classList.toggle('active', (index + 1) === stepNumber); 
+    });
     if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
     if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
     if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
 }
 const showTowingStep = (stepNumber) => showWizardStep(towingWizardState, stepNumber);
 const showFineVehicleStep = (stepNumber) => showWizardStep(fineVehicleWizardState, stepNumber);
+
+// --- Global Shift Timer State ---
+let shiftTimerInterval = null;
+let shiftStartTime = 0;
+let shiftElapsedTime = 0;
+let isTimerRunning = false;
 
 // --- Main Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -204,7 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTimerBtn = document.getElementById('startTimerBtn');
     const stopTimerBtn = document.getElementById('stopTimerBtn');
 
-    // Important CMD Elements
     const cmdButtons = document.querySelectorAll('#importantCmdTab .situation-btn');
     const cmdContentSections = document.querySelectorAll('#importantCmdTab .command-section');
 
@@ -272,9 +285,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (!penalCodeInput) return;
             const raw = penalCodeInput.value;
-            const norm = normalize(raw);
-            const res = lookup(norm); // This uses the global lookup function
-            
+            const norm = normalize(raw); // Uses global normalize
+            const res = lookup(norm); // Uses global lookup
             if (res) {
                 if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
                 if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
@@ -285,9 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
                 if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
             }
-        } catch (error) {
-            console.error("Error during search:", error);
-        }
+        } catch (error) { console.error("Error during search:", error); }
     }
     if (searchBtn && penalCodeInput) {
         searchBtn.addEventListener('click', handleSearch);
@@ -344,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     matches.forEach(charge => {
                         const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
                         el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
-                        analysisList.appendChild(el); // THIS LINE IS CRITICAL AND WAS MISSING BEFORE
+                        analysisList.appendChild(el);
                     });
                 } else {
                     analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
@@ -394,10 +404,12 @@ document.addEventListener('DOMContentLoaded', () => {
             state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length; if (state.totalSteps === 0) { console.warn(`No steps found in wizard "${containerId}"`); return; }
             state.prevBtn = document.getElementById(prevBtnId); state.nextBtn = document.getElementById(nextBtnId);
             state.counter = document.getElementById(counterId); state.restartBtn = document.getElementById(restartBtnId);
-            if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) showStepFunc(state.currentStep - 1); });
-            if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) showStepFunc(state.currentStep + 1); });
-            if (state.restartBtn) state.restartBtn.addEventListener('click', () => { showStepFunc(1); });
-            showStepFunc(1); // Show first step immediately
+            // Use locally defined showStepFunc
+            const localShowStepFunc = (stepNum) => showWizardStep(state, stepNum);
+            if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) localShowStepFunc(state.currentStep - 1); });
+            if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) localShowStepFunc(state.currentStep + 1); });
+            if (state.restartBtn) state.restartBtn.addEventListener('click', () => { localShowStepFunc(1); });
+            localShowStepFunc(1); // Show first step immediately
         } catch (error) {
             console.error(`Error setting up wizard "${containerId}":`, error);
         }
@@ -408,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Apply Initial Settings ---
     applySettings();
 
-    // --- Generic Copy Buttons ---
+    // --- Generic Copy Buttons (Event Delegation) ---
     document.body.addEventListener('click', (event) => {
         try {
             const targetButton = event.target.closest('.copy-btn[data-target]');
