@@ -146,12 +146,11 @@ let shiftStartTime = 0;
 let shiftElapsedTime = 0;
 let isTimerRunning = false;
 
-// --- DOMContentLoaded Event Listener ---
-// Wrap ALL code that interacts with the DOM in this listener
+// --- Main Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Loaded. Initializing...");
 
-    // --- Select Elements ---
+    // --- Select ALL elements ---
     const penalCodeInput = document.getElementById('codeInput');
     const searchBtn = document.getElementById('searchBtn');
     const resultArea = document.getElementById('resultArea');
@@ -206,22 +205,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Settings Logic ---
     function applySettings() {
-        const savedBadge = localStorage.getItem('badgeNumber') || '';
-        if (settingsBadgeInput) settingsBadgeInput.value = savedBadge;
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (themeDarkRadio) themeDarkRadio.checked = (savedTheme === 'dark');
-        if (themeLightRadio) themeLightRadio.checked = (savedTheme === 'light');
-        document.body.classList.toggle('light-theme', savedTheme === 'light');
+        try {
+            const savedBadge = localStorage.getItem('badgeNumber') || '';
+            if (settingsBadgeInput) settingsBadgeInput.value = savedBadge;
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (themeDarkRadio) themeDarkRadio.checked = (savedTheme === 'dark');
+            if (themeLightRadio) themeLightRadio.checked = (savedTheme === 'light');
+            document.body.classList.toggle('light-theme', savedTheme === 'light');
+        } catch (error) {
+            console.error("Error applying settings:", error);
+        }
     }
 
     function saveSettings() {
-        if (settingsBadgeInput) localStorage.setItem('badgeNumber', settingsBadgeInput.value.trim());
-        let selectedTheme = (themeLightRadio && themeLightRadio.checked) ? 'light' : 'dark';
-        localStorage.setItem('theme', selectedTheme);
-        applySettings();
-        if (settingsSavedMsg) {
-            settingsSavedMsg.style.display = 'inline';
-            setTimeout(() => { if (settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
+        try {
+            if (settingsBadgeInput) localStorage.setItem('badgeNumber', settingsBadgeInput.value.trim());
+            let selectedTheme = (themeLightRadio && themeLightRadio.checked) ? 'light' : 'dark';
+            localStorage.setItem('theme', selectedTheme);
+            applySettings();
+            if (settingsSavedMsg) {
+                settingsSavedMsg.style.display = 'inline';
+                setTimeout(() => { if (settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
+            }
+        } catch (error) {
+            console.error("Error saving settings:", error);
         }
     }
     if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
@@ -229,11 +236,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Theme Toggle Button ---
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
-            const isLight = document.body.classList.toggle('light-theme');
-            const newTheme = isLight ? 'light' : 'dark';
-            localStorage.setItem('theme', newTheme);
-            if (themeDarkRadio) themeDarkRadio.checked = !isLight;
-            if (themeLightRadio) themeLightRadio.checked = isLight;
+             try {
+                const isLight = document.body.classList.toggle('light-theme');
+                const newTheme = isLight ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                if (themeDarkRadio) themeDarkRadio.checked = !isLight;
+                if (themeLightRadio) themeLightRadio.checked = isLight;
+            } catch (error) {
+                console.error("Error toggling theme:", error);
+            }
         });
     }
 
@@ -241,9 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function openMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.add('menu-open'); menuOverlay.classList.add('menu-open'); } }
     function closeMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.remove('menu-open'); menuOverlay.classList.remove('menu-open'); } }
     function showTab(targetId) {
-        tabContents.forEach(tab => { tab.classList.toggle('active', tab.id === targetId); });
-        window.scrollTo(0, 0);
+        try {
+            tabContents.forEach(tab => { tab.classList.toggle('active', tab.id === targetId); });
+            window.scrollTo(0, 0);
+        } catch (error) {
+            console.error("Error showing tab:", targetId, error);
+        }
     }
+    // Attach listeners only if buttons exist
     if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
@@ -257,19 +273,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Penal Code Search ---
     function handleSearch() {
-        if (!penalCodeInput) return; // Add check
-        const raw = penalCodeInput.value;
-        const norm = normalize(raw);
-        const res = lookup(norm);
-        if (res) {
-            if (notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
-            if (resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
-            if (starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
-            if (pcTitle) pcTitle.textContent = 'PC ' + norm;
-            if (pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
-        } else {
-            if (resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
-            if (notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+        try {
+            if (!penalCodeInput) return;
+            const raw = penalCodeInput.value;
+            const norm = normalize(raw);
+            const res = lookup(norm); // Make sure lookup is defined globally or within scope
+            if (res) {
+                if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
+                if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
+                if(starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
+                if(pcTitle) pcTitle.textContent = 'PC ' + norm;
+                if(pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
+            } else {
+                if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+                if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+            }
+        } catch (error) {
+            console.error("Error during search:", error);
         }
     }
     if (searchBtn && penalCodeInput) {
@@ -280,62 +300,71 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Duty Tools ---
      if (startDutyBtn && bodycamArea && endBodycamArea) {
         startDutyBtn.addEventListener('click', () => {
-            const savedBadge = localStorage.getItem('badgeNumber');
-            if (!savedBadge || savedBadge.trim() === '') { alert('Please set your Badge Number in the Settings tab first!'); showTab('settingsTab'); return; }
-            const now = new Date(); const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
-            const text = `${savedBadge} to Dispatch, show me 10-41 at ${ukTime}`;
-            navigator.clipboard.writeText(text);
-            bodycamArea.style.display = 'block'; bodycamArea.classList.add('smooth-show');
-            endBodycamArea.style.display = 'none'; endBodycamArea.classList.remove('smooth-show');
+            try {
+                const savedBadge = localStorage.getItem('badgeNumber');
+                if (!savedBadge || savedBadge.trim() === '') { alert('Please set your Badge Number in the Settings tab first!'); showTab('settingsTab'); return; }
+                const now = new Date(); const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
+                const text = `${savedBadge} to Dispatch, show me 10-41 at ${ukTime}`;
+                navigator.clipboard.writeText(text);
+                bodycamArea.style.display = 'block'; bodycamArea.classList.add('smooth-show');
+                endBodycamArea.style.display = 'none'; endBodycamArea.classList.remove('smooth-show');
+            } catch (error) { console.error("Error starting duty:", error); }
         });
     }
     if (endDutyBtn && endBodycamArea && bodycamArea) {
         endDutyBtn.addEventListener('click', () => {
-             const savedBadge = localStorage.getItem('badgeNumber');
-            if (!savedBadge || savedBadge.trim() === '') { alert('Please set your Badge Number in the Settings tab first!'); showTab('settingsTab'); return; }
-            const now = new Date(); const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
-            const text = `${savedBadge} to Dispatch, show me 10-42 at ${ukTime}`;
-            navigator.clipboard.writeText(text);
-            endBodycamArea.style.display = 'block'; endBodycamArea.classList.add('smooth-show');
-            bodycamArea.style.display = 'none'; bodycamArea.classList.remove('smooth-show');
+            try {
+                 const savedBadge = localStorage.getItem('badgeNumber');
+                if (!savedBadge || savedBadge.trim() === '') { alert('Please set your Badge Number in the Settings tab first!'); showTab('settingsTab'); return; }
+                const now = new Date(); const ukTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/London' });
+                const text = `${savedBadge} to Dispatch, show me 10-42 at ${ukTime}`;
+                navigator.clipboard.writeText(text);
+                endBodycamArea.style.display = 'block'; endBodycamArea.classList.add('smooth-show');
+                bodycamArea.style.display = 'none'; bodycamArea.classList.remove('smooth-show');
+            } catch (error) { console.error("Error ending duty:", error); }
         });
     }
 
     // --- Situation Analyzer ---
     if (analyzeBtn && situationInput && analysisList && analysisNotFound && analysisResultArea && analysisSummary) {
         analyzeBtn.addEventListener('click', () => {
-            analyzeBtn.disabled = true; analyzeBtn.textContent = 'Analyzing...';
-            const text = situationInput.value.trim().toLowerCase();
-            const keywords = text.split(/\s+/).filter(k => k.length > 3);
-            const matches = []; let totalStars = 0;
-            if (keywords.length > 0) {
-                for (const code in PC_MAP) {
-                    const charge = PC_MAP[code]; const description = charge.desc.toLowerCase();
-                    if (keywords.some(keyword => description.includes(keyword))) { matches.push({ code, ...charge }); totalStars += charge.count; }
+            try {
+                analyzeBtn.disabled = true; analyzeBtn.textContent = 'Analyzing...';
+                const text = situationInput.value.trim().toLowerCase();
+                const keywords = text.split(/\s+/).filter(k => k.length > 3);
+                const matches = []; let totalStars = 0;
+                if (keywords.length > 0) {
+                    for (const code in PC_MAP) {
+                        const charge = PC_MAP[code]; const description = charge.desc.toLowerCase();
+                        if (keywords.some(keyword => description.includes(keyword))) { matches.push({ code, ...charge }); totalStars += charge.count; }
+                    }
                 }
+                analysisList.innerHTML = ''; // Clear previous results!
+                if (matches.length > 0) {
+                    analysisNotFound.style.display = 'none'; analysisNotFound.classList.remove('smooth-show');
+                    analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
+                    analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
+                    matches.forEach(charge => {
+                        const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
+                        el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
+                        analysisList.appendChild(el);
+                    });
+                } else {
+                    analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
+                    analysisNotFound.style.display = 'block'; analysisNotFound.classList.add('smooth-show');
+                }
+                analyzeBtn.disabled = false; analyzeBtn.textContent = 'Analyze Situation';
+            } catch(error) {
+                console.error("Error in situation analyzer:", error);
+                if(analyzeBtn) { analyzeBtn.disabled = false; analyzeBtn.textContent = 'Analyze Situation'; } // Reset button on error
             }
-            analysisList.innerHTML = ''; // Clear previous results!
-            if (matches.length > 0) {
-                analysisNotFound.style.display = 'none'; analysisNotFound.classList.remove('smooth-show');
-                analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
-                analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
-                matches.forEach(charge => {
-                    const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
-                    el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
-                    analysisList.appendChild(el);
-                });
-            } else {
-                analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
-                analysisNotFound.style.display = 'block'; analysisNotFound.classList.add('smooth-show');
-            }
-            analyzeBtn.disabled = false; analyzeBtn.textContent = 'Analyze Situation';
         });
     }
 
     // --- Shift Timer ---
     function updateTimerDisplay() { if (shiftTimerDisplay) shiftTimerDisplay.textContent = formatTime(shiftElapsedTime); }
-    function startTimer() { if (isTimerRunning) return; isTimerRunning = true; shiftStartTime = Date.now() - (shiftElapsedTime * 1000); shiftTimerInterval = setInterval(() => { shiftElapsedTime = Math.floor((Date.now() - shiftStartTime) / 1000); updateTimerDisplay(); }, 1000); if (startTimerBtn) startTimerBtn.disabled = true; if (stopTimerBtn) stopTimerBtn.disabled = false; }
-    function stopTimer() { if (!isTimerRunning) return; isTimerRunning = false; clearInterval(shiftTimerInterval); if (startTimerBtn) startTimerBtn.disabled = false; if (stopTimerBtn) stopTimerBtn.disabled = true; }
+    function startTimer() { try { if (isTimerRunning) return; isTimerRunning = true; shiftStartTime = Date.now() - (shiftElapsedTime * 1000); shiftTimerInterval = setInterval(() => { shiftElapsedTime = Math.floor((Date.now() - shiftStartTime) / 1000); updateTimerDisplay(); }, 1000); if (startTimerBtn) startTimerBtn.disabled = true; if (stopTimerBtn) stopTimerBtn.disabled = false; } catch(e){ console.error("Timer start error:", e)} }
+    function stopTimer() { try { if (!isTimerRunning) return; isTimerRunning = false; clearInterval(shiftTimerInterval); if (startTimerBtn) startTimerBtn.disabled = false; if (stopTimerBtn) stopTimerBtn.disabled = true; } catch(e) { console.error("Timer stop error:", e)} }
     if (startTimerBtn) startTimerBtn.addEventListener('click', startTimer);
     if (stopTimerBtn) stopTimerBtn.addEventListener('click', stopTimer);
     updateTimerDisplay();
@@ -344,49 +373,70 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideAllCmdSections() {
         cmdContentSections.forEach(section => { if (section) { section.style.display = 'none'; section.classList.remove('smooth-show'); } });
     }
-    if (cmdButtons && cmdContentSections) {
+    if (cmdButtons && cmdContentSections && cmdContentSections.length > 0) { // Check length too
          const buttonToContentMap = { 'cmdLawyerBtn': 'cmdLawyerContent', 'cmdCodeABtn': 'cmdCodeAContent', 'cmdAfterSitBtn': 'cmdAfterSitContent', 'cmdJumpsuitBtn': 'cmdJumpsuitContent', 'cmdPlateVinBtn': 'cmdPlateVinContent' };
          cmdButtons.forEach(button => {
             button.addEventListener('click', (event) => {
-                const buttonId = event.currentTarget.id; const contentId = buttonToContentMap[buttonId];
-                const contentElement = document.getElementById(contentId);
-                if (contentElement) {
-                    const isVisible = contentElement.style.display === 'block';
-                    hideAllCmdSections();
-                    if (!isVisible) { contentElement.style.display = 'block'; contentElement.classList.add('smooth-show'); }
-                }
+                try {
+                    const buttonId = event.currentTarget.id; const contentId = buttonToContentMap[buttonId];
+                    const contentElement = document.getElementById(contentId);
+                    if (contentElement) {
+                        const isVisible = contentElement.style.display === 'block';
+                        hideAllCmdSections();
+                        if (!isVisible) { contentElement.style.display = 'block'; contentElement.classList.add('smooth-show'); }
+                    } else { console.warn(`Content section ${contentId} not found for button ${buttonId}`); }
+                } catch(error) { console.error("Error toggling CMD section:", error); }
             });
          });
-    }
+    } else { console.warn("Important CMD buttons or content sections not found or empty."); }
+
 
     // --- Wizard Setup ---
-    function setupWizard(state, containerId, prevBtnId, nextBtnId, counterId, restartBtnId, showStepFunc) {
-        const container = document.getElementById(containerId); if (!container) { console.warn(`Wizard container "${containerId}" not found`); return; }
-        state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length; if (state.totalSteps === 0) { console.warn(`No steps found in wizard "${containerId}"`); return; }
-        state.prevBtn = document.getElementById(prevBtnId); state.nextBtn = document.getElementById(nextBtnId);
-        state.counter = document.getElementById(counterId); state.restartBtn = document.getElementById(restartBtnId);
-        if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) showStepFunc(state.currentStep - 1); });
-        if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) showStepFunc(state.currentStep + 1); });
-        if (state.restartBtn) state.restartBtn.addEventListener('click', () => { showStepFunc(1); });
-        showStepFunc(1); // Show first step immediately
+    // Moved showWizardStep definitions inside DOMContentLoaded
+    function showWizardStepLocal(state, stepNumber) {
+        if (!state.steps || state.steps.length === 0) return;
+        state.currentStep = stepNumber;
+        state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
+        if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
+        if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
+        if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
     }
-    setupWizard(towingWizardState, 'towingWizardContainer', 'prevStepBtn', 'nextStepBtn', 'stepCounter', 'restartWizardBtn', showTowingStep);
-    setupWizard(fineVehicleWizardState, 'fineWizardContainer', 'prevFineStepBtn', 'nextFineStepBtn', 'fineStepCounter', 'restartFineWizardBtn', showFineVehicleStep);
+    const showTowingStepLocal = (stepNumber) => showWizardStepLocal(towingWizardState, stepNumber);
+    const showFineVehicleStepLocal = (stepNumber) => showWizardStepLocal(fineVehicleWizardState, stepNumber);
+
+    function setupWizard(state, containerId, prevBtnId, nextBtnId, counterId, restartBtnId, showStepFunc) {
+        try {
+            const container = document.getElementById(containerId); if (!container) { console.warn(`Wizard container "${containerId}" not found`); return; }
+            state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length; if (state.totalSteps === 0) { console.warn(`No steps found in wizard "${containerId}"`); return; }
+            state.prevBtn = document.getElementById(prevBtnId); state.nextBtn = document.getElementById(nextBtnId);
+            state.counter = document.getElementById(counterId); state.restartBtn = document.getElementById(restartBtnId);
+            if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) showStepFunc(state.currentStep - 1); });
+            if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) showStepFunc(state.currentStep + 1); });
+            if (state.restartBtn) state.restartBtn.addEventListener('click', () => { showStepFunc(1); });
+            showStepFunc(1); // Show first step immediately
+        } catch (error) {
+            console.error(`Error setting up wizard "${containerId}":`, error);
+        }
+    }
+    setupWizard(towingWizardState, 'towingWizardContainer', 'prevStepBtn', 'nextStepBtn', 'stepCounter', 'restartWizardBtn', showTowingStepLocal);
+    setupWizard(fineVehicleWizardState, 'fineWizardContainer', 'prevFineStepBtn', 'nextFineStepBtn', 'fineStepCounter', 'restartFineWizardBtn', showFineVehicleStepLocal);
 
     // --- Apply Initial Settings ---
     applySettings();
 
     // --- Generic Copy Buttons ---
     document.body.addEventListener('click', (event) => {
-        const targetButton = event.target.closest('.copy-btn[data-target]');
-        if (targetButton) {
-            const targetId = targetButton.dataset.target; const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                navigator.clipboard.writeText(targetElement.textContent);
-                const originalText = targetButton.textContent;
-                if (originalText.toLowerCase() !== 'copied!') { targetButton.textContent = 'Copied!'; setTimeout(() => { targetButton.textContent = originalText; }, 1000); }
-            } else { console.warn(`Copy target not found: ${targetId}`); }
-        }
+        try {
+            const targetButton = event.target.closest('.copy-btn[data-target]');
+            if (targetButton) {
+                const targetId = targetButton.dataset.target; const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    navigator.clipboard.writeText(targetElement.textContent);
+                    const originalText = targetButton.textContent;
+                    if (originalText.toLowerCase() !== 'copied!') { targetButton.textContent = 'Copied!'; setTimeout(() => { targetButton.textContent = originalText; }, 1000); }
+                } else { console.warn(`Copy target not found: ${targetId}`); }
+            }
+        } catch (error) { console.error("Error handling copy button click:", error); }
     });
 
     console.log("Initialization complete.");
