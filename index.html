@@ -27,7 +27,9 @@
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
   </button>
   <button id="themeToggleBtn" title="Toggle Theme">
+    <!-- Sun icon -->
     <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+    <!-- Moon icon -->
     <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
   </button>
   <button id="menuToggleBtn">☰</button>
@@ -169,5 +171,163 @@
             <div class="wizard-step"><h2 class="step-title">Step 1: Find Vehicle</h2><p>Locate the vehicle associated with the violation.</p></div>
             <div class="wizard-step"><h2 class="step-title">Step 2: Check Owner's Daily Fines</h2><p>Check the owner of the vehicle in the PDA. Make sure they haven't already received a fine for the same violation today. If they have, you cannot issue another fine for it.</p></div>
             <div class="wizard-step"><h2 class="step-title">Step 3: Log Plates/VIN (Screenshot)</h2><p>Type one of the following commands in chat and <strong>take a screenshot</strong>.</p><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="fineCmd1">/me Searches the plates through the LSPD database and writes them down.</div><button class="copy-btn" data-target="fineCmd1">Copy</button></div></div><div class="result" style="display:block; margin-top:10px; padding: 12px 16px;"><p style="margin:0;"><strong>If no plates are visible:</strong></p><div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;"><div id="fineCmd2">/me Kneels down, feels the VIN number under the car and run it through LSPD.</div><button class="copy-btn" data-target="fineCmd2">Copy</button></div></div></div>
-            <div class="wizard-step"><h2 class="step-title">Step 4: Check Plate/Owner in PDA (Screenshot)</h2><p>Check the license plate in the PDA and <strong>take a screenshot</strong>.</p><p style="margin-top:10px;">If there is no license
+            <div class="wizard-step"><h2 class="step-title">Step 4: Check Plate/Owner in PDA (Screenshot)</h2><p>Check the license plate in the PDA and <strong>take a screenshot</strong>.</p><p style="margin-top:10px;">If there is no license plate, check the owner's name and <strong>take a screenshot</strong> of that.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 5: Check Owner's Fines (Screenshot)</h2><p>Check the owner's fine history in the PDA and <strong>take a screenshot</strong>.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 6: Issue Fine</h2><p>Click the button "Issue a Fine" in the PDA and fill in the details for the violation.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Step 7: Screenshot Confirmation</h2><p>After issuing the fine, <strong>take a screenshot</strong> of the confirmation screen or the updated fine history showing the new fine.</p></div>
+            <div class="wizard-step"><h2 class="step-title">Procedure Complete</h2><p>The fine has been issued and documented.</p><button id="restartFineWizardBtn" style="margin-top: 15px;">Start Over</button></div>
+          </div>
+          <div id="fineWizardNav" class="row" style="margin-top: 20px; justify-content: space-between; align-items:center;">
+            <button id="prevFineStepBtn">Previous Step</button>
+            <span id="fineStepCounter" style="color: var(--muted); font-size: 14px;"></span>
+            <button id="nextFineStepBtn">Next Step</button>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <!-- Settings Tab -->
+  <div id="settingsTab" class="tab-content">
+      <div class="container">
+        <h1>Settings</h1>
+        <p class="lead">Adjust application settings here (saved in your browser).</p>
+        <div class="card">
+          <h2 style="margin-bottom:15px; font-size: 18px;">Preferences</h2>
+          <div style="margin-bottom: 20px;">
+            <label for="settingsBadgeInput" style="display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px;">Default Badge Number:</label>
+            <input id="settingsBadgeInput" type="text" placeholder="Enter your badge #" style="max-width: 200px;"/>
+            <p class="small" style="margin-top: 5px;">This will pre-fill the badge number in Duty Tools.</p>
+          </div>
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 8px; color: var(--muted); font-size: 14px;">Theme:</label>
+            <div class="row" style="gap: 15px;">
+              <label style="cursor: pointer; display:flex; align-items:center;">
+                <input type="radio" name="theme" value="dark" id="themeDarkRadio" checked>
+                <span style="margin-left: 8px;">Dark (Default)</span>
+              </label>
+              <label style="cursor: pointer; display:flex; align-items:center;">
+                <input type="radio" name="theme" value="light" id="themeLightRadio">
+                <span style="margin-left: 8px;">Light</span>
+              </label>
+            </div>
+          </div>
+          <button id="saveSettingsBtn" style="width: 150px;">Save Settings</button>
+          <span id="settingsSavedMsg" style="margin-left: 15px; color: var(--accent); font-size: 14px; display: none;">Saved!</span>
+        </div>
+      </div>
+  </div>
+
+   <!-- About Tab -->
+   <div id="aboutTab" class="tab-content">
+       <div id="aboutBackground">
+          <div class="container about-content">
+              <h1>About This Tool</h1>
+              <div class="card" style="background: rgba(var(--card-rgb), 0.85); backdrop-filter: blur(5px);">
+                  <p style="line-height: 1.7; font-size: 15px;">
+                      This website made by an LSPD officer, its goal is to help officers on their duty.
+                  </p>
+                  <p style="margin-top: 15px; line-height: 1.7; font-size: 15px;">
+                      The goal is to help new and experienced officers alike perform their duties efficiently and accurately, reducing confusion and saving time during critical moments. Whether you need to look up a charge, follow towing procedures, or manage your duty status, this aims to be a reliable partner on patrol.
+                  </p>
+                  <p style="margin-top: 15px; line-height: 1.7; font-size: 15px;">
+                      Stay safe out there.
+                  </p>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Important CMD Tab -->
+  <div id="importantCmdTab" class="tab-content">
+      <div class="container">
+          <h1>Important Commands</h1>
+          <p class="lead">Quick reference for essential commands.</p>
+          <div class="card">
+              <!-- Lawyer Situation -->
+              <button id="cmdLawyerBtn" class="situation-btn">Lawyer Situation</button>
+              <div id="cmdLawyerContent" class="command-section" style="display:none;">
+                  <div class="command-item">
+                      <div id="cmdLawyer1">/do saves the bodycam content to SSD and uploads it to LSPD servers.</div>
+                      <button class="copy-btn" data-target="cmdLawyer1">Copy</button>
+                  </div>
+                  <div class="command-item">
+                      <div id="cmdLawyer2">/me takes SSD out of bodycam</div>
+                      <button class="copy-btn" data-target="cmdLawyer2">Copy</button>
+                  </div>
+                  <div class="command-item">
+                      <div id="cmdLawyer3">/me hands over body cam SSD to the lawyer</div>
+                      <button class="copy-btn" data-target="cmdLawyer3">Copy</button>
+                  </div>
+                  <div class="command-item">
+                      <div id="cmdLawyer4">/do Puts a new SSD into bodycam and continues to record</div>
+                      <button class="copy-btn" data-target="cmdLawyer4">Copy</button>
+                  </div>
+              </div>
+
+              <!-- After CODE A -->
+              <button id="cmdCodeABtn" class="situation-btn">After CODE A</button>
+              <div id="cmdCodeAContent" class="command-section" style="display:none;">
+                   <div class="command-item">
+                      <div id="cmdCodeA1">/me refreshes bodycam</div>
+                      <button class="copy-btn" data-target="cmdCodeA1">Copy</button>
+                  </div>
+              </div>
+
+              <!-- After situation -->
+              <button id="cmdAfterSitBtn" class="situation-btn">After Situation</button>
+              <div id="cmdAfterSitContent" class="command-section" style="display:none;">
+                  <div class="command-item">
+                      <div id="cmdAfterSit1">/do uploads the bodycam content to LSPD servers and continues recording</div>
+                      <button class="copy-btn" data-target="cmdAfterSit1">Copy</button>
+                  </div>
+              </div>
+
+              <!-- Jumpsuit CMD -->
+              <button id="cmdJumpsuitBtn" class="situation-btn">Jumpsuit CMD</button>
+              <div id="cmdJumpsuitContent" class="command-section" style="display:none;">
+                  <div class="command-item">
+                      <div id="cmdJumpsuit1">/me grabs small jumpsuit from the closet.</div>
+                      <button class="copy-btn" data-target="cmdJumpsuit1">Copy</button>
+                  </div>
+                   <div class="command-item">
+                      <div id="cmdJumpsuit2">/me grabs medium jumpsuit from the closet.</div>
+                      <button class="copy-btn" data-target="cmdJumpsuit2">Copy</button>
+                  </div>
+                   <div class="command-item">
+                      <div id="cmdJumpsuit3">/me grabs large jumpsuit from the closet.</div>
+                      <button class="copy-btn" data-target="cmdJumpsuit3">Copy</button>
+                  </div>
+                   <div class="command-item">
+                      <div id="cmdJumpsuit4">/me grabs universal jumpsuit from the closet.</div>
+                      <button class="copy-btn" data-target="cmdJumpsuit4">Copy</button>
+                  </div>
+                   <div class="command-item">
+                      <div id="cmdJumpsuit5">/me drops the jumpsuit on the bed.</div>
+                      <button class="copy-btn" data-target="cmdJumpsuit5">Copy</button>
+                  </div>
+                   <div class="command-item">
+                      <div id="cmdJumpsuit6">/try takes comms, radio and lockpick set</div>
+                      <button class="copy-btn" data-target="cmdJumpsuit6">Copy</button>
+                  </div>
+              </div>
+
+              <!-- License plate/VIN number -->
+              <button id="cmdPlateVinBtn" class="situation-btn">License plate/VIN number</button>
+              <div id="cmdPlateVinContent" class="command-section" style="display:none;">
+                   <div class="command-item">
+                      <div id="cmdPlateVin1">/me Searches the plates through the LSPD database and writes them down.</div>
+                      <button class="copy-btn" data-target="cmdPlateVin1">Copy</button>
+                  </div>
+                  <div class="command-item">
+                      <div id="cmdPlateVin2">/me Kneels down, feels the VIN number under the car and run it through LSPD.</div>
+                      <button class="copy-btn" data-target="cmdPlateVin2">Copy</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
