@@ -87,7 +87,7 @@ const PC_MAP = {
     "3.7": {stars:'⭐⭐',count:2,fine:'$20,000',desc:'Illegal Gambling'},
     "3.8.1": {stars:'⭐⭐',count:2,fine:'$35,000',desc:'Impersonating a public Servant'},
     "3.8.2": {stars:'⭐⭐⭐',count:3,fine:'$35,000',desc:'Impersonating a law enforcement Officer'},
-    "3.9.1": {stars:'⭐⭐⭐',count:3,fine:'$25,000',desc:'Breach of electoral silence'},
+    "3.9.1": {stars:'⭐⭐⭐',count:3,fine:'$25,0M00',desc:'Breach of electoral silence'},
     "3.9.2": {stars:'⭐⭐⭐⭐',count:4,fine:'$50,000',desc:'Breach of electoral silence at the voting booth'},
     "3.9.3": {stars:'⭐⭐⭐⭐',count:4,fine:'$35,000',desc:'Blocking a voting site'},
     "3.9.4": {stars:'⭐⭐⭐⭐',count:4,fine:'$35,000',desc:'Illegal persuasion of votes'},
@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startTimerBtn = document.getElementById('startTimerBtn');
     const stopTimerBtn = document.getElementById('stopTimerBtn');
 
+    // Important CMD Elements
     const cmdButtons = document.querySelectorAll('#importantCmdTab .situation-btn');
     const cmdContentSections = document.querySelectorAll('#importantCmdTab .command-section');
 
@@ -216,9 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (themeDarkRadio) themeDarkRadio.checked = (savedTheme === 'dark');
             if (themeLightRadio) themeLightRadio.checked = (savedTheme === 'light');
             document.body.classList.toggle('light-theme', savedTheme === 'light');
-        } catch (error) {
-            console.error("Error applying settings:", error);
-        }
+        } catch (error) { console.error("Error applying settings:", error); }
     }
 
     function saveSettings() {
@@ -231,9 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 settingsSavedMsg.style.display = 'inline';
                 setTimeout(() => { if (settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
             }
-        } catch (error) {
-            console.error("Error saving settings:", error);
-        }
+        } catch (error) { console.error("Error saving settings:", error); }
     }
     if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
 
@@ -246,9 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('theme', newTheme);
                 if (themeDarkRadio) themeDarkRadio.checked = !isLight;
                 if (themeLightRadio) themeLightRadio.checked = isLight;
-            } catch (error) {
-                console.error("Error toggling theme:", error);
-            }
+            } catch (error) { console.error("Error toggling theme:", error); }
         });
     }
 
@@ -259,9 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             tabContents.forEach(tab => { tab.classList.toggle('active', tab.id === targetId); });
             window.scrollTo(0, 0);
-        } catch (error) {
-            console.error("Error showing tab:", targetId, error);
-        }
+        } catch (error) { console.error("Error showing tab:", targetId, error); }
     }
     if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
@@ -281,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const raw = penalCodeInput.value;
             const norm = normalize(raw);
             const res = lookup(norm); // This uses the global lookup function
+            
             if (res) {
                 if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
                 if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
@@ -350,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     matches.forEach(charge => {
                         const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
                         el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
-                        analysisList.appendChild(el);
+                        analysisList.appendChild(el); // THIS LINE IS CRITICAL AND WAS MISSING BEFORE
                     });
                 } else {
                     analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
@@ -412,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupWizard(fineVehicleWizardState, 'fineWizardContainer', 'prevFineStepBtn', 'nextFineStepBtn', 'fineStepCounter', 'restartFineWizardBtn', showFineVehicleStep);
 
     // --- Apply Initial Settings ---
-    applySettings(); // Run this first
+    applySettings();
 
     // --- Generic Copy Buttons ---
     document.body.addEventListener('click', (event) => {
@@ -429,8 +423,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { console.error("Error handling copy button click:", error); }
     });
 
-    // Home tab is active by default in HTML, no need to call showTab('homeTab');
     console.log("Initialization complete.");
-
-}); // End of DOMContentLoaded
+});
 
