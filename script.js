@@ -130,8 +130,19 @@ const fineVehicleWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevB
 
 // --- Helper Functions ---
 const normalize = (input) => input ? input.trim().toUpperCase().replace(/^PC\s*/, '').replace(/\s+/g, '') : '';
-const lookup = (code) => { /* ... lookup logic ... */ }; // Abridged
-const formatTime = (seconds) => { /* ... timer format logic ... */ }; // Abridged
+const lookup = (code) => {
+    const key = code.replace(/\s+/g, '');
+    if (PC_MAP[key]) return PC_MAP[key];
+    const parts = key.match(/(\d)(\d{1,2})(\d{1,2})/);
+    if (parts) {
+        const alt = `${parts[1]}.${parts[2]}.${parts[3]}`;
+        if (PC_MAP[alt]) return PC_MAP[alt];
+    }
+    const prefix = key.split('.').slice(0, 2).join('.');
+    if (PC_MAP[prefix]) return PC_MAP[prefix];
+    return null;
+};
+const formatTime = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = Math.floor(seconds % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; };
 
 // --- Wizard Step Display Functions ---
 function showWizardStep(state, stepNumber) {
@@ -215,7 +226,7 @@ function initializeApp() {
         applySettings();
         if (settingsSavedMsg) {
             settingsSavedMsg.style.display = 'inline';
-            setTimeout(() => { settingsSavedMsg.style.display = 'none'; }, 2000);
+            setTimeout(() => { if(settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
         }
     }
     if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
@@ -235,7 +246,10 @@ function initializeApp() {
     function openMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.add('menu-open'); menuOverlay.classList.add('menu-open'); } }
     function closeMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.remove('menu-open'); menuOverlay.classList.remove('menu-open'); } }
     function showTab(targetId) {
-        tabContents.forEach(tab => { tab.classList.toggle('active', tab.id === targetId); });
+        if (!tabContents) return;
+        tabContents.forEach(tab => {
+             if(tab) tab.classList.toggle('active', tab.id === targetId);
+        });
         window.scrollTo(0, 0);
     }
     if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
@@ -251,7 +265,7 @@ function initializeApp() {
 
     // --- Penal Code Search ---
     if (searchBtn && penalCodeInput) {
-        const handleSearch = () => { // Wrap logic in a function
+        const handleSearch = () => {
             const raw = penalCodeInput.value;
             const norm = normalize(raw);
             const res = lookup(norm);
@@ -312,7 +326,7 @@ function initializeApp() {
                 analysisNotFound.style.display = 'none'; analysisNotFound.classList.remove('smooth-show');
                 analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
                 analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
-                matches.forEach(charge => { // Corrected loop
+                matches.forEach(charge => {
                     const el = document.createElement('div');
                     el.className = 'result';
                     el.style.display = 'flex';
@@ -381,8 +395,7 @@ function initializeApp() {
     // --- Apply Initial Settings ---
     applySettings();
 
-    // --- Generic Copy Buttons ---
-    // Use event delegation for copy buttons for robustness
+    // --- Generic Copy Buttons (Using Event Delegation) ---
     document.body.addEventListener('click', (event) => {
         const targetButton = event.target.closest('.copy-btn[data-target]');
         if (targetButton) {
@@ -401,11 +414,8 @@ function initializeApp() {
         }
     });
 
-
+    // Home tab is active by default in HTML
     console.log("Initialization complete.");
 
-} // End of initializeApp function
-
-// --- Attach the main initializer to DOMContentLoaded ---
-document.addEventListener('DOMContentLoaded', initializeApp);
+}); // End of DOMContentLoaded
 
