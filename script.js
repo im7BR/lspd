@@ -145,12 +145,11 @@ function showWizardStep(state, stepNumber) {
 const showTowingStep = (stepNumber) => showWizardStep(towingWizardState, stepNumber);
 const showFineVehicleStep = (stepNumber) => showWizardStep(fineVehicleWizardState, stepNumber);
 
-// --- Main Initialization ---
-document.addEventListener('DOMContentLoaded', () => {
+// --- Main Initialization Function ---
+function initializeApp() {
     console.log("DOM Loaded. Initializing...");
 
     // --- Select ALL elements ---
-    // Using const for elements that shouldn't change
     const penalCodeInput = document.getElementById('codeInput');
     const searchBtn = document.getElementById('searchBtn');
     const resultArea = document.getElementById('resultArea');
@@ -199,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const cmdButtons = document.querySelectorAll('#importantCmdTab .situation-btn');
     const cmdContentSections = document.querySelectorAll('#importantCmdTab .command-section');
 
-
     // --- Settings ---
     function applySettings() {
         const savedBadge = localStorage.getItem('badgeNumber') || '';
@@ -237,13 +235,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function openMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.add('menu-open'); menuOverlay.classList.add('menu-open'); } }
     function closeMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.remove('menu-open'); menuOverlay.classList.remove('menu-open'); } }
     function showTab(targetId) {
-        if (!tabContents) return;
-        tabContents.forEach(tab => {
-             if(tab) tab.classList.toggle('active', tab.id === targetId);
-        });
+        tabContents.forEach(tab => { tab.classList.toggle('active', tab.id === targetId); });
         window.scrollTo(0, 0);
     }
-
     if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
     if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMenu);
     if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
@@ -257,10 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Penal Code Search ---
     if (searchBtn && penalCodeInput) {
-        searchBtn.addEventListener('click', () => {
+        const handleSearch = () => { // Wrap logic in a function
             const raw = penalCodeInput.value;
             const norm = normalize(raw);
-            const res = lookup(norm); // Make sure lookup is defined globally or within scope
+            const res = lookup(norm);
             if (res) {
                  if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
                  if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
@@ -271,8 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
                  if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
                  if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
             }
-        });
-        penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') searchBtn.click(); });
+        };
+        searchBtn.addEventListener('click', handleSearch);
+        penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSearch(); });
     }
 
     // --- Duty Tools ---
@@ -312,16 +307,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (keywords.some(keyword => description.includes(keyword))) { matches.push({ code, ...charge }); totalStars += charge.count; }
                 }
             }
-            analysisList.innerHTML = ''; // Clear previous results! IMPORTANT
+            analysisList.innerHTML = ''; // Clear previous results!
             if (matches.length > 0) {
                 analysisNotFound.style.display = 'none'; analysisNotFound.classList.remove('smooth-show');
                 analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
                 analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
-                // *** THIS PART IS CRUCIAL ***
-                matches.forEach(charge => {
+                matches.forEach(charge => { // Corrected loop
                     const el = document.createElement('div');
-                    el.className = 'result'; // Use result class for styling
-                    el.style.display = 'flex'; // Ensure flex display
+                    el.className = 'result';
+                    el.style.display = 'flex';
                     el.innerHTML = `
                         <div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div>
                         <div>
@@ -330,9 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}
                             </div>
                         </div>`;
-                    analysisList.appendChild(el); // Append the created element
+                    analysisList.appendChild(el); // Append the result
                 });
-                // *** END OF CRUCIAL PART ***
             } else {
                 analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
                 analysisNotFound.style.display = 'block'; analysisNotFound.classList.add('smooth-show');
@@ -341,7 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     // --- Shift Timer ---
     let shiftTimerInterval = null, shiftStartTime = 0, shiftElapsedTime = 0, isTimerRunning = false;
     function updateTimerDisplay() { if (shiftTimerDisplay) shiftTimerDisplay.textContent = formatTime(shiftElapsedTime); }
@@ -349,14 +341,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function stopTimer() { if (!isTimerRunning) return; isTimerRunning = false; clearInterval(shiftTimerInterval); if (startTimerBtn) startTimerBtn.disabled = false; if (stopTimerBtn) stopTimerBtn.disabled = true; }
     if (startTimerBtn) startTimerBtn.addEventListener('click', startTimer);
     if (stopTimerBtn) stopTimerBtn.addEventListener('click', stopTimer);
-    updateTimerDisplay(); // Initial display
+    updateTimerDisplay();
 
     // --- Important CMD Button Logic ---
     function hideAllCmdSections() {
         if (cmdContentSections) {
-            cmdContentSections.forEach(section => {
-                if (section) { section.style.display = 'none'; section.classList.remove('smooth-show'); }
-            });
+            cmdContentSections.forEach(section => { if (section) { section.style.display = 'none'; section.classList.remove('smooth-show'); } });
         }
     }
     if (cmdButtons && cmdContentSections) {
@@ -392,17 +382,30 @@ document.addEventListener('DOMContentLoaded', () => {
     applySettings();
 
     // --- Generic Copy Buttons ---
-    document.querySelectorAll('.copy-btn[data-target]').forEach(theBtn => {
-        theBtn.addEventListener('click', () => {
-            const targetId = theBtn.dataset.target; const target = document.getElementById(targetId);
-            if (target) {
-                navigator.clipboard.writeText(target.textContent);
-                const originalText = theBtn.textContent;
-                if (originalText.toLowerCase() !== 'copied!') { theBtn.textContent = 'Copied!'; setTimeout(() => { theBtn.textContent = originalText; }, 1000); }
-            } else { console.warn(`Copy target not found: ${targetId}`); }
-        });
+    // Use event delegation for copy buttons for robustness
+    document.body.addEventListener('click', (event) => {
+        const targetButton = event.target.closest('.copy-btn[data-target]');
+        if (targetButton) {
+            const targetId = targetButton.dataset.target;
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                navigator.clipboard.writeText(targetElement.textContent);
+                const originalText = targetButton.textContent;
+                if (originalText.toLowerCase() !== 'copied!') {
+                    targetButton.textContent = 'Copied!';
+                    setTimeout(() => { targetButton.textContent = originalText; }, 1000);
+                }
+            } else {
+                console.warn(`Copy target not found: ${targetId}`);
+            }
+        }
     });
 
+
     console.log("Initialization complete.");
-}); // End of DOMContentLoaded
+
+} // End of initializeApp function
+
+// --- Attach the main initializer to DOMContentLoaded ---
+document.addEventListener('DOMContentLoaded', initializeApp);
 
