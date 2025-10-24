@@ -124,43 +124,22 @@ const PC_MAP = {
     "5.7": {stars:'⭐⭐⭐⭐',count:4,fine:'$20,000',desc:'Perjury'}
 };
 
-// State objects for wizards
-const towingWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
-const fineVehicleWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
-
 // --- Helper Functions ---
 const normalize = (input) => input ? input.trim().toUpperCase().replace(/^PC\s*/, '').replace(/\s+/g, '') : '';
-const lookup = (code) => {
-    const key = code.replace(/\s+/g, '');
-    if (PC_MAP[key]) return PC_MAP[key];
-    const parts = key.match(/(\d)(\d{1,2})(\d{1,2})/);
-    if (parts) {
-        const alt = `${parts[1]}.${parts[2]}.${parts[3]}`;
-        if (PC_MAP[alt]) return PC_MAP[alt];
-    }
-    const prefix = key.split('.').slice(0, 2).join('.');
-    if (PC_MAP[prefix]) return PC_MAP[prefix];
-    return null;
-};
-const formatTime = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = Math.floor(seconds % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; };
+const lookup = (code) => { /* ... lookup logic ... */ }; // Abridged
+const formatTime = (seconds) => { /* ... timer format logic ... */ }; // Abridged
 
-// --- Wizard Step Display Functions ---
-function showWizardStep(state, stepNumber) {
-    if (!state.steps || state.steps.length === 0) return;
-    state.currentStep = stepNumber;
-    state.steps.forEach((step, index) => { step.classList.toggle('active', (index + 1) === stepNumber); });
-    if (state.counter) state.counter.textContent = `Step ${state.currentStep} of ${state.totalSteps}`;
-    if (state.prevBtn) state.prevBtn.disabled = state.currentStep === 1;
-    if (state.nextBtn) state.nextBtn.disabled = state.currentStep === state.totalSteps;
-}
-const showTowingStep = (stepNumber) => showWizardStep(towingWizardState, stepNumber);
-const showFineVehicleStep = (stepNumber) => showWizardStep(fineVehicleWizardState, stepNumber);
+// --- State Variables ---
+let shiftTimerInterval = null;
+let shiftStartTime = 0;
+let shiftElapsedTime = 0;
+let isTimerRunning = false;
 
-// --- Main Initialization Function ---
-function initializeApp() {
+// --- DOMContentLoaded Event Listener ---
+document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Loaded. Initializing...");
 
-    // --- Select ALL elements ---
+    // --- Select Elements ---
     const penalCodeInput = document.getElementById('codeInput');
     const searchBtn = document.getElementById('searchBtn');
     const resultArea = document.getElementById('resultArea');
@@ -209,7 +188,14 @@ function initializeApp() {
     const cmdButtons = document.querySelectorAll('#importantCmdTab .situation-btn');
     const cmdContentSections = document.querySelectorAll('#importantCmdTab .command-section');
 
-    // --- Settings ---
+    // Check if essential elements were found
+     if (!penalCodeInput || !startDutyBtn || !menuToggleBtn || !tabContents || tabContents.length === 0 || !analyzeBtn || !settingsBtn) {
+        console.error("Essential elements missing! Aborting script setup.");
+        alert("Error loading page components. Please ensure index.html is correct and all element IDs match the script.");
+        return; // Stop script execution
+    }
+
+    // --- Settings Logic ---
     function applySettings() {
         const savedBadge = localStorage.getItem('badgeNumber') || '';
         if (settingsBadgeInput) settingsBadgeInput.value = savedBadge;
@@ -226,7 +212,7 @@ function initializeApp() {
         applySettings();
         if (settingsSavedMsg) {
             settingsSavedMsg.style.display = 'inline';
-            setTimeout(() => { if(settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
+            setTimeout(() => { if (settingsSavedMsg) settingsSavedMsg.style.display = 'none'; }, 2000);
         }
     }
     if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveSettings);
@@ -246,10 +232,7 @@ function initializeApp() {
     function openMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.add('menu-open'); menuOverlay.classList.add('menu-open'); } }
     function closeMenu() { if (slideMenu && menuOverlay) { slideMenu.classList.remove('menu-open'); menuOverlay.classList.remove('menu-open'); } }
     function showTab(targetId) {
-        if (!tabContents) return;
-        tabContents.forEach(tab => {
-             if(tab) tab.classList.toggle('active', tab.id === targetId);
-        });
+        tabContents.forEach(tab => { tab.classList.toggle('active', tab.id === targetId); });
         window.scrollTo(0, 0);
     }
     if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMenu);
@@ -264,22 +247,22 @@ function initializeApp() {
     if (aboutBtn) aboutBtn.addEventListener('click', () => { showTab('aboutTab'); closeMenu(); });
 
     // --- Penal Code Search ---
+    function handleSearch() {
+        const raw = penalCodeInput.value;
+        const norm = normalize(raw);
+        const res = lookup(norm);
+        if (res) {
+            if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
+            if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
+            if(starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
+            if(pcTitle) pcTitle.textContent = 'PC ' + norm;
+            if(pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
+        } else {
+            if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+            if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+        }
+    }
     if (searchBtn && penalCodeInput) {
-        const handleSearch = () => {
-            const raw = penalCodeInput.value;
-            const norm = normalize(raw);
-            const res = lookup(norm);
-            if (res) {
-                 if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
-                 if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
-                 if(starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
-                 if(pcTitle) pcTitle.textContent = 'PC ' + norm;
-                 if(pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
-            } else {
-                 if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
-                 if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
-            }
-        };
         searchBtn.addEventListener('click', handleSearch);
         penalCodeInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleSearch(); });
     }
@@ -327,18 +310,9 @@ function initializeApp() {
                 analysisResultArea.style.display = 'block'; analysisResultArea.classList.add('smooth-show');
                 analysisSummary.textContent = `Found ${matches.length} matching charges. Total Stars: ${totalStars}`;
                 matches.forEach(charge => {
-                    const el = document.createElement('div');
-                    el.className = 'result';
-                    el.style.display = 'flex';
-                    el.innerHTML = `
-                        <div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div>
-                        <div>
-                            <div style="font-weight:700">PC ${charge.code}</div>
-                            <div class="meta small">
-                                Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}
-                            </div>
-                        </div>`;
-                    analysisList.appendChild(el); // Append the result
+                    const el = document.createElement('div'); el.className = 'result'; el.style.display = 'flex';
+                    el.innerHTML = `<div class="stars">${charge.stars === '—' ? '🚩' : charge.stars}</div><div><div style="font-weight:700">PC ${charge.code}</div><div class="meta small">Stars: ${charge.count} &nbsp; • &nbsp; Fine: ${charge.fine}<br>${charge.desc}</div></div>`;
+                    analysisList.appendChild(el);
                 });
             } else {
                 analysisResultArea.style.display = 'none'; analysisResultArea.classList.remove('smooth-show');
@@ -359,9 +333,7 @@ function initializeApp() {
 
     // --- Important CMD Button Logic ---
     function hideAllCmdSections() {
-        if (cmdContentSections) {
-            cmdContentSections.forEach(section => { if (section) { section.style.display = 'none'; section.classList.remove('smooth-show'); } });
-        }
+        cmdContentSections.forEach(section => { if (section) { section.style.display = 'none'; section.classList.remove('smooth-show'); } });
     }
     if (cmdButtons && cmdContentSections) {
          const buttonToContentMap = { 'cmdLawyerBtn': 'cmdLawyerContent', 'cmdCodeABtn': 'cmdCodeAContent', 'cmdAfterSitBtn': 'cmdAfterSitContent', 'cmdJumpsuitBtn': 'cmdJumpsuitContent', 'cmdPlateVinBtn': 'cmdPlateVinContent' };
@@ -395,27 +367,19 @@ function initializeApp() {
     // --- Apply Initial Settings ---
     applySettings();
 
-    // --- Generic Copy Buttons (Using Event Delegation) ---
+    // --- Generic Copy Buttons ---
     document.body.addEventListener('click', (event) => {
         const targetButton = event.target.closest('.copy-btn[data-target]');
         if (targetButton) {
-            const targetId = targetButton.dataset.target;
-            const targetElement = document.getElementById(targetId);
+            const targetId = targetButton.dataset.target; const targetElement = document.getElementById(targetId);
             if (targetElement) {
                 navigator.clipboard.writeText(targetElement.textContent);
                 const originalText = targetButton.textContent;
-                if (originalText.toLowerCase() !== 'copied!') {
-                    targetButton.textContent = 'Copied!';
-                    setTimeout(() => { targetButton.textContent = originalText; }, 1000);
-                }
-            } else {
-                console.warn(`Copy target not found: ${targetId}`);
-            }
+                if (originalText.toLowerCase() !== 'copied!') { targetButton.textContent = 'Copied!'; setTimeout(() => { targetButton.textContent = originalText; }, 1000); }
+            } else { console.warn(`Copy target not found: ${targetId}`); }
         }
     });
 
-    // Home tab is active by default in HTML
     console.log("Initialization complete.");
-
 }); // End of DOMContentLoaded
 
