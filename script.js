@@ -126,16 +126,28 @@ const PC_MAP = {
 
 // --- Helper Functions ---
 const normalize = (input) => input ? input.trim().toUpperCase().replace(/^PC\s*/, '').replace(/\s+/g, '') : '';
-const lookup = (code) => { /* ... lookup logic ... */ }; // Abridged
-const formatTime = (seconds) => { /* ... timer format logic ... */ }; // Abridged
+const lookup = (code) => {
+    const key = code.replace(/\s+/g, '');
+    if (PC_MAP[key]) return PC_MAP[key];
+    const parts = key.match(/(\d)(\d{1,2})(\d{1,2})/);
+    if (parts) {
+        const alt = `${parts[1]}.${parts[2]}.${parts[3]}`;
+        if (PC_MAP[alt]) return PC_MAP[alt];
+    }
+    const prefix = key.split('.').slice(0, 2).join('.');
+    if (PC_MAP[prefix]) return PC_MAP[prefix];
+    return null;
+};
+const formatTime = (seconds) => { const h = Math.floor(seconds / 3600); const m = Math.floor((seconds % 3600) / 60); const s = Math.floor(seconds % 60); return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`; };
 
-// --- State Variables ---
+// --- Global Variables/State ---
 let shiftTimerInterval = null;
 let shiftStartTime = 0;
 let shiftElapsedTime = 0;
 let isTimerRunning = false;
 
 // --- DOMContentLoaded Event Listener ---
+// Wrap ALL code that interacts with the DOM in this listener
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM Loaded. Initializing...");
 
@@ -188,12 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const cmdButtons = document.querySelectorAll('#importantCmdTab .situation-btn');
     const cmdContentSections = document.querySelectorAll('#importantCmdTab .command-section');
 
-    // Check if essential elements were found
-     if (!penalCodeInput || !startDutyBtn || !menuToggleBtn || !tabContents || tabContents.length === 0 || !analyzeBtn || !settingsBtn) {
-        console.error("Essential elements missing! Aborting script setup.");
-        alert("Error loading page components. Please ensure index.html is correct and all element IDs match the script.");
-        return; // Stop script execution
-    }
+    // Wizard State Objects (defined within scope)
+    const towingWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
+    const fineVehicleWizardState = { currentStep: 1, totalSteps: 0, steps: [], prevBtn: null, nextBtn: null, counter: null, restartBtn: null };
 
     // --- Settings Logic ---
     function applySettings() {
@@ -248,18 +257,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Penal Code Search ---
     function handleSearch() {
+        if (!penalCodeInput) return; // Add check
         const raw = penalCodeInput.value;
         const norm = normalize(raw);
         const res = lookup(norm);
         if (res) {
-            if(notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
-            if(resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
-            if(starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
-            if(pcTitle) pcTitle.textContent = 'PC ' + norm;
-            if(pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
+            if (notFound) { notFound.style.display = 'none'; notFound.classList.remove('smooth-show'); }
+            if (resultArea) { resultArea.style.display = 'flex'; resultArea.classList.add('smooth-show'); }
+            if (starDisplay) starDisplay.textContent = res.stars === '—' ? '🚩' : res.stars;
+            if (pcTitle) pcTitle.textContent = 'PC ' + norm;
+            if (pcMeta) pcMeta.innerHTML = `<div class="small">Stars: ${res.stars === '—' ? 0 : res.count} &nbsp; • &nbsp; Fine: ${res.fine}</div><div class="small">${res.desc}</div>`;
         } else {
-            if(resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
-            if(notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
+            if (resultArea) { resultArea.style.display = 'none'; resultArea.classList.remove('smooth-show'); }
+            if (notFound) { notFound.style.display = 'block'; notFound.classList.add('smooth-show'); }
         }
     }
     if (searchBtn && penalCodeInput) {
@@ -323,7 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Shift Timer ---
-    let shiftTimerInterval = null, shiftStartTime = 0, shiftElapsedTime = 0, isTimerRunning = false;
     function updateTimerDisplay() { if (shiftTimerDisplay) shiftTimerDisplay.textContent = formatTime(shiftElapsedTime); }
     function startTimer() { if (isTimerRunning) return; isTimerRunning = true; shiftStartTime = Date.now() - (shiftElapsedTime * 1000); shiftTimerInterval = setInterval(() => { shiftElapsedTime = Math.floor((Date.now() - shiftStartTime) / 1000); updateTimerDisplay(); }, 1000); if (startTimerBtn) startTimerBtn.disabled = true; if (stopTimerBtn) stopTimerBtn.disabled = false; }
     function stopTimer() { if (!isTimerRunning) return; isTimerRunning = false; clearInterval(shiftTimerInterval); if (startTimerBtn) startTimerBtn.disabled = false; if (stopTimerBtn) stopTimerBtn.disabled = true; }
@@ -352,14 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Wizard Setup ---
     function setupWizard(state, containerId, prevBtnId, nextBtnId, counterId, restartBtnId, showStepFunc) {
-        const container = document.getElementById(containerId); if (!container) return;
-        state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length; if (state.totalSteps === 0) return;
+        const container = document.getElementById(containerId); if (!container) { console.warn(`Wizard container "${containerId}" not found`); return; }
+        state.steps = container.querySelectorAll('.wizard-step'); state.totalSteps = state.steps.length; if (state.totalSteps === 0) { console.warn(`No steps found in wizard "${containerId}"`); return; }
         state.prevBtn = document.getElementById(prevBtnId); state.nextBtn = document.getElementById(nextBtnId);
         state.counter = document.getElementById(counterId); state.restartBtn = document.getElementById(restartBtnId);
         if (state.prevBtn) state.prevBtn.addEventListener('click', () => { if (state.currentStep > 1) showStepFunc(state.currentStep - 1); });
         if (state.nextBtn) state.nextBtn.addEventListener('click', () => { if (state.currentStep < state.totalSteps) showStepFunc(state.currentStep + 1); });
         if (state.restartBtn) state.restartBtn.addEventListener('click', () => { showStepFunc(1); });
-        showStepFunc(1);
+        showStepFunc(1); // Show first step immediately
     }
     setupWizard(towingWizardState, 'towingWizardContainer', 'prevStepBtn', 'nextStepBtn', 'stepCounter', 'restartWizardBtn', showTowingStep);
     setupWizard(fineVehicleWizardState, 'fineWizardContainer', 'prevFineStepBtn', 'nextFineStepBtn', 'fineStepCounter', 'restartFineWizardBtn', showFineVehicleStep);
@@ -381,5 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     console.log("Initialization complete.");
+
 }); // End of DOMContentLoaded
 
